@@ -1,4 +1,4 @@
-package ar.edu.unq.grupo7.PronosticosDeportivos.security
+package ar.edu.unq.grupo7.pronosticosdeportivos.configuration
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean

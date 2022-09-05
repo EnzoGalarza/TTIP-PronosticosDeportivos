@@ -1,7 +1,7 @@
-package ar.edu.unq.grupo7.PronosticosDeportivos.api.competition
+package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
-import ar.edu.unq.grupo7.PronosticosDeportivos.dto.CompetitionsDTO
-import ar.edu.unq.grupo7.PronosticosDeportivos.model.competition.Competition
+import ar.edu.unq.grupo7.pronosticosdeportivos.dto.CompetitionsDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.Competition
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
