@@ -8,20 +8,21 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
+
+
+
 @CrossOrigin
 @RestController
 class CompetitionController {
 
     @Autowired
-    private val competitionService: CompetitionService? = null
+    lateinit var competitionService: CompetitionService
 
-    //@GetMapping(value = ["/getCompetitions"])
-    //open fun getCompetitions(): ResponseEntity<MutableList<Competition>> {
-    //    val competitions: MutableList<Competition> = competitionService?.getCompetitions() ?:
-    //    //if (competitions.isEmpty()) {
-    //    //    //arrojar excepción
-    //    //}
-    //    return ResponseEntity<MutableList<Competition?>?>(competitions, HttpStatus.OK)
-    //}
+    @GetMapping(value = ["/competitions"])
+    fun getCompetitions(): ResponseEntity<MutableList<Competition>> {
+        val competitions : MutableList<Competition> = competitionService!!.getCompetitions()
+
+        return ResponseEntity<MutableList<Competition>>(competitions, HttpStatus.OK)
+    }
 
 }
