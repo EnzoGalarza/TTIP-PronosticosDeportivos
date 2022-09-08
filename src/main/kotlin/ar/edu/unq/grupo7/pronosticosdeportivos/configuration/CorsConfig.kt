@@ -16,10 +16,10 @@ class CorsConfig {
     fun addCorsConfig(): WebMvcConfigurer {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                val allowedOrigins = corsOriginPatterns.split(",").toTypedArray()
                 registry.addMapping("/**")
                     .allowedMethods("*")
-                    .allowedOriginPatterns(*allowedOrigins)
+                    .allowedOrigins("http://localhost:8080/")
+                    .allowedOriginPatterns("*")
                     .allowCredentials(true)
             }
         }
