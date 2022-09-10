@@ -16,9 +16,9 @@ class PronosticoController {
     @Autowired
     private lateinit var pronosticoService: PronosticoService
 
-    @GetMapping(value = ["/pronosticos"])
-    fun getPronosticos() : List<Pronostico>{
-         return pronosticoService.findAll()
+    @GetMapping(value = ["/pronosticos/{user}"])
+    fun getPronosticosDeUsuario(@PathVariable("user") user : String) : List<Pronostico>{
+         return pronosticoService.pronosticosDeUsuario(user)
     }
 
     @PostMapping("/pronostico")

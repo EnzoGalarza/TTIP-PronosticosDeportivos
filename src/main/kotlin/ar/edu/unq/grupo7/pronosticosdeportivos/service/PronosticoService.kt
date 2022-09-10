@@ -11,8 +11,10 @@ class PronosticoService {
     @Autowired
     private lateinit var repository : PronosticoRepository
 
-    fun findAll() : List<Pronostico>{
-        return repository.findAll()
+    fun pronosticosDeUsuario(user:String) : List<Pronostico>{
+        val optional = repository.pronosticosDeUsuario(user)
+
+        return optional.get()
     }
 
     fun save(pronostico: Pronostico): Pronostico{
