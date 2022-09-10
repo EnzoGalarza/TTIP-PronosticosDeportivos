@@ -26,8 +26,8 @@ class PartidoControllerTest(@Mock val partidoService : PartidoService) {
         val eq2 = EquipoDTO("Southampton FC","SOU","logoSou")
         val eq3 = EquipoDTO("Aston Villa FC","SOU","logoSou")
         val score = ScoreDTO("DRAW", ResultDTO(1,2))
-        val partido1 = PartidoDTO("FINISHED","2022-11-05T15:00:00Z",25,eq1,eq2,score)
-        val partido2 = PartidoDTO("FINISHED","2022-11-05T15:00:00Z",30,eq1,eq3,score)
+        val partido1 = PartidoDTO(1,"FINISHED","2022-11-05T15:00:00Z",25,eq1,eq2,score)
+        val partido2 = PartidoDTO(2,"FINISHED","2022-11-05T15:00:00Z",30,eq1,eq3,score)
 
         Mockito.`when`(partidoService.getPartidos("PL")).thenReturn(mutableListOf(partido1,partido2))
 
