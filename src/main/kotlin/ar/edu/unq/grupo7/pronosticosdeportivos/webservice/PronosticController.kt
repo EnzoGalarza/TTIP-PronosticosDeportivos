@@ -1,7 +1,7 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.Pronostico
-import ar.edu.unq.grupo7.pronosticosdeportivos.service.PronosticoService
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.Pronostic
+import ar.edu.unq.grupo7.pronosticosdeportivos.service.PronosticService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.http.HttpStatus
@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @EnableAutoConfiguration
 @CrossOrigin
-class PronosticoController {
+class PronosticController {
 
     @Autowired
-    private lateinit var pronosticoService: PronosticoService
+    private lateinit var pronosticService: PronosticService
 
     @GetMapping(value = ["/pronosticos/{user}"])
-    fun getPronosticosDeUsuario(@PathVariable("user") user : String) : List<Pronostico>{
-         return pronosticoService.pronosticosDeUsuario(user)
+    fun getPronosticsFromUser(@PathVariable("user") user : String) : List<Pronostic>{
+         return pronosticService.pronosticsFromUser(user)
     }
 
     @PostMapping("/pronostico")
-    fun registrarPronostico(@RequestBody pronostico: Pronostico) : ResponseEntity<Any>{
-        var pronosticoGuardado = pronosticoService.save(pronostico)
+    fun registerPronostic(@RequestBody pronostic: Pronostic) : ResponseEntity<Any>{
+        var pronosticoGuardado = pronosticService.save(pronostic)
         return ResponseEntity(pronosticoGuardado,HttpStatus.CREATED)
     }
 

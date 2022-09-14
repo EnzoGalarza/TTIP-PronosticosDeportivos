@@ -1,7 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.PartidoDTO
-import ar.edu.unq.grupo7.pronosticosdeportivos.service.PartidoService
+import ar.edu.unq.grupo7.pronosticosdeportivos.service.MatchService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -10,14 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class PartidoController {
+class MatchController {
 
     @Autowired
-    lateinit var partidoService: PartidoService
+    lateinit var matchService: MatchService
 
     @GetMapping(value = ["/matches/{competition}"])
     fun getTodosLosPartidos(@PathVariable("competition") competition: String): ResponseEntity<Any> {
-        val partidos = partidoService.getPartidos(competition)
+        val partidos = matchService.getMatches(competition)
         return ResponseEntity(partidos,HttpStatus.OK)
     }
 
