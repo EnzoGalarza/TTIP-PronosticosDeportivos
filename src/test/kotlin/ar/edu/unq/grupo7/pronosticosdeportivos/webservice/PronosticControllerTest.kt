@@ -19,15 +19,18 @@ class PronosticControllerTest(@Mock val pronosticService : PronosticService) {
     lateinit var pronosticController: PronosticController
 
     @Test
-    fun registerAPronostic(){
-        val pronostic = Pronostic("pedro",33,2,2)
+    fun registerPronostics(){
+        val pronostic1 = Pronostic("pedro",33,2,2)
+        val pronostic2 = Pronostic("pedro",34,2,1)
 
-        Mockito.`when`(pronosticService.save(pronostic)).thenReturn(pronostic)
+        val pronosticsToSave = mutableListOf(pronostic1,pronostic2)
 
-        val pronosticoObtenido = pronosticController.registerPronostic(pronostic)
+        Mockito.`when`(pronosticService.saveAll(pronosticsToSave)).thenReturn(mutableListOf(pronostic1,pronostic2))
 
-        assertEquals(pronosticoObtenido.body,pronostic)
-        assertEquals(pronosticoObtenido.statusCode,HttpStatus.CREATED)
+        val obtainedPronostics = pronosticController.registerPronostics(pronosticsToSave)
+
+        assertEquals(obtainedPronostics.body,pronosticsToSave)
+        assertEquals(obtainedPronostics.statusCode,HttpStatus.CREATED)
     }
 
     @Test

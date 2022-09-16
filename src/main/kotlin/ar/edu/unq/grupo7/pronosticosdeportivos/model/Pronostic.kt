@@ -5,7 +5,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "pronosticos")
 data class Pronostic(@Column val user: String, @Column val matchId: Int,
-                     @Column val localGoals: Int, @Column val awayGoals: Int){
+                     @Column var localGoals: Int, @Column var awayGoals: Int){
 
 
     @Id
@@ -16,5 +16,10 @@ data class Pronostic(@Column val user: String, @Column val matchId: Int,
         if(localGoals == this.localGoals && awayGoals == this.awayGoals)
             return 3
         return 0
+    }
+
+    fun updateGoals(pronostic: Pronostic){
+        this.localGoals = pronostic.localGoals
+        this.awayGoals = pronostic.awayGoals
     }
 }

@@ -16,16 +16,21 @@ class PronosticController {
     @Autowired
     private lateinit var pronosticService: PronosticService
 
-    @GetMapping(value = ["/pronosticos/{user}"])
+    @GetMapping(value = ["/pronostics/{user}"])
     fun getPronosticsFromUser(@PathVariable("user") user : String) : List<Pronostic>{
          return pronosticService.pronosticsFromUser(user)
     }
 
-    @PostMapping("/pronostico")
-    fun registerPronostic(@RequestBody pronostic: Pronostic) : ResponseEntity<Any>{
-        var pronosticoGuardado = pronosticService.save(pronostic)
-        return ResponseEntity(pronosticoGuardado,HttpStatus.CREATED)
+    @PostMapping("/pronostics")
+    fun registerPronostics(@RequestBody pronosticList: MutableList<Pronostic>) : ResponseEntity<List<Pronostic>>{
+        pronosticService.saveAll(pronosticList)
+        return ResponseEntity(pronosticList,HttpStatus.CREATED)
     }
 
+    @PutMapping("/pronostics/update")
+    fun updatePronostics(@RequestBody pronosticList : MutableList<Pronostic>) : ResponseEntity<Any>{
+        pronosticService.updateGoals(pronosticList)
+        return ResponseEntity(HttpStatus.OK)
+    }
 
 }
