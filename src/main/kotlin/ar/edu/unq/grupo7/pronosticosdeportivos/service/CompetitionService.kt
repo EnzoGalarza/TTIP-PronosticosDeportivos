@@ -2,6 +2,8 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.CompetitionsDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.Competition
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.CurrentSeasonDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.SeasonDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
@@ -26,6 +28,19 @@ class CompetitionService {
         )
 
         return response.body!!.competitions
+    }
+
+    fun getCurrentMatchDay(competition: String) : Int{
+        var headers : HttpHeaders = HttpHeaders()
+        headers.set("X-Auth-Token","f5bedce0ca024352a218d300e71d0798")
+
+        var entity = HttpEntity("parameters",headers)
+
+        var response = restTemplate.exchange("https://api.football-data.org/v4/competitions/${competition}/",HttpMethod.GET,entity,
+            object : ParameterizedTypeReference<SeasonDTO>(){}
+        )
+
+        return response.body!!.currentSeason.currentMatchday
     }
 
 }

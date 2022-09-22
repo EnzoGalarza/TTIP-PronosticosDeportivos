@@ -14,10 +14,12 @@ class MatchController {
     @Autowired
     lateinit var matchService: MatchService
 
-    @GetMapping(value = ["/matches/{competition}"])
-    fun getTodosLosPartidos(@PathVariable("competition") competition: String): ResponseEntity<Any> {
-        val partidos = matchService.getMatches(competition)
-        return ResponseEntity(partidos,HttpStatus.OK)
+    @GetMapping(value = ["/matches/{competition}/{matchDay}"])
+    fun getMatches(@PathVariable("competition") competition: String,
+                   @PathVariable("matchDay") matchDay: String): ResponseEntity<Any> {
+        val matches = matchService.getMatches(competition, matchDay)
+
+        return ResponseEntity(matches,HttpStatus.OK)
     }
 
 }
