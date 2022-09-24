@@ -16,7 +16,7 @@ class MatchController {
 
     @GetMapping(value = ["/matches/{competition}/{matchDay}"])
     fun getMatches(@PathVariable("competition") competition: String,
-                   @PathVariable("matchDay") matchDay: String): ResponseEntity<Any> {
+                   @PathVariable("matchDay") matchDay: Int): ResponseEntity<Any> {
         val matches = matchService.getMatches(competition, matchDay)
 
         return ResponseEntity(matches,HttpStatus.OK)

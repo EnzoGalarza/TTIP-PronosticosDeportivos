@@ -1,7 +1,11 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.Match
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchListDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.toDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
@@ -16,16 +20,31 @@ class MatchService {
     @Autowired
     lateinit var restTemplate : RestTemplate
 
-    fun getMatches(competition: String, matchDay: String): List<MatchDTO> {
-        var headers : HttpHeaders = HttpHeaders()
-        headers.set("X-Auth-Token","f5bedce0ca024352a218d300e71d0798")
-        var entity = HttpEntity("parameters",headers)
+    @Autowired
+    lateinit var repository : MatchRepository
 
-        var response = restTemplate.exchange("https://api.football-data.org/v4/competitions/${competition}/matches?matchday=${matchDay}", HttpMethod.GET,entity,
-            object : ParameterizedTypeReference<MatchListDTO>() {}
-        )
+    fun getMatches(competition: String, matchDay: Int): List<MatchDTO> {
+        if(repository.countFinishedMatchesByCompetition(matchDay,competition) == 0){
+            var headers : HttpHeaders = HttpHeaders()
+            headers.set("X-Auth-Token","f5bedce0ca024352a218d300e71d0798")
+            var entity = HttpEntity("parameters",headers)
 
-        return response.body!!.matches
+            var response = restTemplate.exchange("https://api.football-data.org/v4/competitions/${competition}/matches?matchday=${matchDay}", HttpMethod.GET,entity,
+                object : ParameterizedTypeReference<MatchListDTO>() {}
+            )
+
+            saveEndedMatches(response.body!!.matches.map { it.toModel(competition) },matchDay)
+            return response.body!!.matches
+        }
+
+
+
+
+        return repository.findByMatchDay(matchDay).map { it.toDTO() }
+    }
+
+    private fun saveEndedMatches(matches : List<Match>, currentDay : Int){
+        repository.saveAll(matches.filter { it.status == "FINISHED" })
     }
 
 }
