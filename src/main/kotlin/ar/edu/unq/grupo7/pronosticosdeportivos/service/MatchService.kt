@@ -1,10 +1,10 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.Match
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchListDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.toDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.toDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
@@ -36,9 +36,6 @@ class MatchService {
             saveEndedMatches(response.body!!.matches.map { it.toModel(competition) },matchDay)
             return response.body!!.matches
         }
-
-
-
 
         return repository.findByMatchDay(matchDay).map { it.toDTO() }
     }

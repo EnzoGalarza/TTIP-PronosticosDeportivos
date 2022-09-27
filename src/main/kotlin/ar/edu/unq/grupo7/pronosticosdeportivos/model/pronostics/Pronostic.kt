@@ -1,4 +1,4 @@
-package ar.edu.unq.grupo7.pronosticosdeportivos.model
+package ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics
 
 import javax.persistence.*
 

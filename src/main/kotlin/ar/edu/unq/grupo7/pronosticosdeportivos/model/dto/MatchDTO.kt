@@ -1,6 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.dto
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.Match
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset

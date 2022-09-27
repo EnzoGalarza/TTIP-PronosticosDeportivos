@@ -1,7 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.repositories
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.Competition
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.Match
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

@@ -1,6 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.dto
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.Team
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Team
 
 data class TeamDTO(val name: String?, val tla: String?, val crest : String?) {
 

@@ -1,6 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.Pronostic
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.PronosticRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

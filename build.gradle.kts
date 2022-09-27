@@ -24,6 +24,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.postgresql:postgresql:42.5.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.3")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("com.sun.mail:javax.mail:1.6.2")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

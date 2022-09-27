@@ -1,8 +1,7 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.CompetitionsDTO
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.Competition
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.CurrentSeasonDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Competition
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.SeasonDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.CompetitionRepository
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,5 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

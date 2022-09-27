@@ -1,4 +1,4 @@
-package ar.edu.unq.grupo7.pronosticosdeportivos.model
+package ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.ResultDTO
