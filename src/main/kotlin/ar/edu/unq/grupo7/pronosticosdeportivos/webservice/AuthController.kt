@@ -8,10 +8,12 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.ConfirmationTokenService
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 
@@ -44,7 +46,7 @@ class AuthController {
     }
 
     @PostMapping("login")
-    fun login (@RequestBody login: LoginDTO): ResponseEntity<WebToken> {
+    fun login (@RequestBody login: LoginDTO): ResponseEntity<UserDetails> {
 
         authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
@@ -59,7 +61,15 @@ class AuthController {
 
         var webToken = WebToken(jwt)
 
-        return ResponseEntity<WebToken>(webToken, HttpStatus.OK)
+        val responseHeaders = HttpHeaders()
+        responseHeaders.set(
+            "Authentication",
+            webToken.jwtToken
+        )
+
+        return ResponseEntity.ok()
+            .headers(responseHeaders)
+            .body(user);
     }
 
     @GetMapping(path = ["confirmToken"])

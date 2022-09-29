@@ -21,6 +21,7 @@ class CorsConfig {
                     .allowedOrigins("http://localhost:8080/")
                     .allowedOriginPatterns("*")
                     .allowCredentials(true)
+                    .exposedHeaders("Authentication")
             }
         }
     }
