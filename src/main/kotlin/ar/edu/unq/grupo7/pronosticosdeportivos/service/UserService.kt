@@ -10,14 +10,21 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.validations.EmailValidator
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.*
+import javax.transaction.Transactional
 
 @Service
 @Transactional
-class UserService {
+class UserService: UserDetailsService {
+
+    companion object {
+        private const val USER_NOT_FOUND = "Usuario %s no encontrado"
+    }
 
     private val emailValidator: EmailValidator = EmailValidator()
 
@@ -28,6 +35,12 @@ class UserService {
 
     @Autowired
     private lateinit var confirmationTokenService : ConfirmationTokenService
+
+    @Throws(UsernameNotFoundException::class)
+    override fun loadUserByUsername(email: String): UserDetails {
+        return userRepository.findByEmail(email)
+            .orElseThrow { UsernameNotFoundException(String.format(UserService.USER_NOT_FOUND, email)) }
+    }
 
     fun registerUser(user: User) {
         val isValidEmail: Boolean = this.emailValidator.test(user.username)

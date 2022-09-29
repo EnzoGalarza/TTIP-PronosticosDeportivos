@@ -26,7 +26,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.3")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.sun.mail:javax.mail:1.6.2")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
