@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "equipos")
-class Team(val name: String, val tla : String?, val crest : String?) {
+class Team(val name: String?, val tla : String?, val crest : String?) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

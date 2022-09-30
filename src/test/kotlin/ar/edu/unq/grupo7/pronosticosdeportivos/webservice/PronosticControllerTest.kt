@@ -1,5 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.PronosticService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -18,10 +19,20 @@ class PronosticControllerTest(@Mock val pronosticService : PronosticService) {
     @InjectMocks
     lateinit var pronosticController: PronosticController
 
+    @Mock
+    private lateinit var match : Match
+
+    @Mock
+    private lateinit var match2 : Match
+
+    @Mock
+    private lateinit var match3 : Match
+
+
     @Test
     fun registerPronostics(){
-        val pronostic1 = Pronostic("pedro",33,2,2)
-        val pronostic2 = Pronostic("pedro",34,2,1)
+        val pronostic1 = Pronostic("pedro",match,2,2)
+        val pronostic2 = Pronostic("pedro",match2,2,1)
 
         val pronosticsToSave = mutableListOf(pronostic1,pronostic2)
 
@@ -35,9 +46,9 @@ class PronosticControllerTest(@Mock val pronosticService : PronosticService) {
 
     @Test
     fun getAllPronosticsFromUser(){
-        val pronostic1 = Pronostic("jose",34,2,1)
-        val pronostic2 = Pronostic("jose",35,2,2)
-        val pronostic3 = Pronostic("pedro",34,2,1)
+        val pronostic1 = Pronostic("jose",match,2,1)
+        val pronostic2 = Pronostic("jose",match2,2,2)
+        val pronostic3 = Pronostic("pedro",match3,2,1)
 
         Mockito.`when`(pronosticService.pronosticsFromUser("jose")).thenReturn(listOf(pronostic1,pronostic2))
 

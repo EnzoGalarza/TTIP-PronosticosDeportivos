@@ -1,10 +1,13 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import javax.persistence.*
 
 @Entity
 @Table(name = "pronosticos")
-data class Pronostic(@Column val user: String, @Column val matchId: Int,
+data class Pronostic(@Column val user: String,
+                     @OneToOne(cascade = [CascadeType.ALL])
+                     @JoinColumn(name = "code",referencedColumnName = "code") var match: Match,
                      @Column var localGoals: Int, @Column var awayGoals: Int){
 
 
@@ -21,5 +24,9 @@ data class Pronostic(@Column val user: String, @Column val matchId: Int,
     fun updateGoals(pronostic: Pronostic){
         this.localGoals = pronostic.localGoals
         this.awayGoals = pronostic.awayGoals
+    }
+
+    fun updateMatch(match: Match){
+        this.match = match
     }
 }

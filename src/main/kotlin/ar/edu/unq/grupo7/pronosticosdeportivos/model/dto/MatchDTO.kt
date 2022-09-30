@@ -14,5 +14,5 @@ data class MatchDTO(var id : Long, var status: String, var utcDate : LocalDateTi
     }
 }
 
-fun MatchDTO.toModel(competition : String) = Match(teams = listOf(homeTeam.toModel(),awayTeam.toModel()),date = utcDate,
+fun MatchDTO.toModel(competition : String) = Match(homeTeam = homeTeam.toModel(), awayTeam = awayTeam.toModel(),date = utcDate,
     localGoals = score.fullTime.home, awayGoals = score.fullTime.away, code = id,status = status, matchDay = matchday, competition = competition)

@@ -20,5 +20,5 @@ interface PronosticRepository : JpaRepository<Pronostic,Long>{
     @Query("UPDATE Pronostic p SET p.localGoals = :localGoals, p.awayGoals = :awayGoals WHERE p.id = :id")
     fun updatePronostic(@Param("id") id : Long, @Param("localGoals") localGoals : Int, @Param("awayGoals") awayGoals : Int)
 
-    fun findByMatchId(matchId : Int) : Optional<Pronostic>
+    fun findByUser(user : String) : List<Pronostic>
 }

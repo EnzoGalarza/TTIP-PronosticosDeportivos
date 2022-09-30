@@ -24,7 +24,7 @@ class MatchService {
     lateinit var repository : MatchRepository
 
     fun getMatches(competition: String, matchDay: Int): List<MatchDTO> {
-        if(repository.countFinishedMatchesByCompetition(matchDay,competition) == 0){
+        if(repository.countMatchesByCompetitionAndDay(matchDay,competition) == 0){
             var headers : HttpHeaders = HttpHeaders()
             headers.set("X-Auth-Token","f5bedce0ca024352a218d300e71d0798")
             var entity = HttpEntity("parameters",headers)
@@ -33,15 +33,15 @@ class MatchService {
                 object : ParameterizedTypeReference<MatchListDTO>() {}
             )
 
-            saveEndedMatches(response.body!!.matches.map { it.toModel(competition) },matchDay)
+            repository.saveAll(response.body!!.matches.map { it.toModel(competition) })
             return response.body!!.matches
         }
 
         return repository.findByMatchDay(matchDay).map { it.toDTO() }
     }
 
-    private fun saveEndedMatches(matches : List<Match>, currentDay : Int){
-        repository.saveAll(matches.filter { it.status == "FINISHED" })
+    fun getByCode(code : Long) : Match {
+        return repository.findByCode(code)
     }
 
 }
