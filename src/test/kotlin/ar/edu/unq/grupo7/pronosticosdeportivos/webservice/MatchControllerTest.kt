@@ -13,6 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.http.HttpStatus
+import java.time.LocalDateTime
 
 @ExtendWith(MockitoExtension::class)
 class MatchControllerTest(@Mock val matchService : MatchService) {
@@ -22,16 +23,17 @@ class MatchControllerTest(@Mock val matchService : MatchService) {
 
     @Test
     fun getMatchsOfCompetitionPL(){
+        val date = LocalDateTime.now().minusDays(2)
         val eq1 = TeamDTO("Manchester United","MUN","logoMun")
         val eq2 = TeamDTO("Southampton FC","SOU","logoSou")
         val eq3 = TeamDTO("Aston Villa FC","SOU","logoSou")
         val score = ScoreDTO("DRAW", ResultDTO(1,2))
-        val partido1 = MatchDTO(1,"FINISHED","2022-11-05T15:00:00Z",25,eq1,eq2,score)
-        val partido2 = MatchDTO(2,"FINISHED","2022-11-05T15:00:00Z",30,eq1,eq3,score)
+        val partido1 = MatchDTO(1,"FINISHED",date,25,eq1,eq2,score)
+        val partido2 = MatchDTO(2,"FINISHED",date,30,eq1,eq3,score)
 
-        Mockito.`when`(matchService.getMatches("PL")).thenReturn(mutableListOf(partido1,partido2))
+        Mockito.`when`(matchService.getMatches("PL",1)).thenReturn(mutableListOf(partido1,partido2))
 
-        var todosLosPartidos = matchController.getTodosLosPartidos("PL")
+        var todosLosPartidos = matchController.getMatches("PL",1)
 
         assertEquals(mutableListOf(partido1,partido2),todosLosPartidos.body)
         assertEquals(HttpStatus.OK,todosLosPartidos.statusCode)

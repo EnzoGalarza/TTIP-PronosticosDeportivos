@@ -1,5 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.MatchService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -16,7 +17,7 @@ class MatchController {
 
     @GetMapping(value = ["/matches/{competition}/{matchDay}"])
     fun getMatches(@PathVariable("competition") competition: String,
-                   @PathVariable("matchDay") matchDay: Int): ResponseEntity<Any> {
+                   @PathVariable("matchDay") matchDay: Int): ResponseEntity<List<MatchDTO>> {
         val matches = matchService.getMatches(competition, matchDay)
 
         return ResponseEntity(matches,HttpStatus.OK)
