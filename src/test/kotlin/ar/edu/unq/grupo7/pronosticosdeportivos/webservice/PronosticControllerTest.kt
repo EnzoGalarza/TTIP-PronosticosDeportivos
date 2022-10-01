@@ -19,21 +19,12 @@ class PronosticControllerTest(@Mock val pronosticService : PronosticService) {
     @InjectMocks
     lateinit var pronosticController: PronosticController
 
-    @Mock
-    private lateinit var match : Match
-
-    @Mock
-    private lateinit var match2 : Match
-
-    @Mock
-    private lateinit var match3 : Match
+    @Mock private lateinit var pronostic1 : Pronostic
+    @Mock private lateinit var pronostic2 : Pronostic
 
 
     @Test
     fun registerPronostics(){
-        val pronostic1 = Pronostic("pedro",match,2,2)
-        val pronostic2 = Pronostic("pedro",match2,2,1)
-
         val pronosticsToSave = mutableListOf(pronostic1,pronostic2)
 
         Mockito.`when`(pronosticService.saveAll(pronosticsToSave)).thenReturn(mutableListOf(pronostic1,pronostic2))
@@ -46,17 +37,13 @@ class PronosticControllerTest(@Mock val pronosticService : PronosticService) {
 
     @Test
     fun getAllPronosticsFromUser(){
-        val pronostic1 = Pronostic("jose",match,2,1)
-        val pronostic2 = Pronostic("jose",match2,2,2)
-        val pronostic3 = Pronostic("pedro",match3,2,1)
+        Mockito.`when`(pronosticService.pronosticsFromUser("jose")).thenReturn(listOf(pronostic1))
 
-        Mockito.`when`(pronosticService.pronosticsFromUser("jose")).thenReturn(listOf(pronostic1,pronostic2))
-
-        val todosLosPronosticos = listOf(pronostic1,pronostic2,pronostic3)
+        val todosLosPronosticos = listOf(pronostic1,pronostic2)
         val pronosticosDeJose = pronosticController.getPronosticsFromUser("jose")
 
-        assertEquals(2,pronosticosDeJose.size)
-        assertEquals(listOf(pronostic1,pronostic2), pronosticosDeJose)
+        assertEquals(1,pronosticosDeJose.size)
+        assertEquals(listOf(pronostic1), pronosticosDeJose)
         assertNotEquals(todosLosPronosticos,pronosticosDeJose)
     }
 
