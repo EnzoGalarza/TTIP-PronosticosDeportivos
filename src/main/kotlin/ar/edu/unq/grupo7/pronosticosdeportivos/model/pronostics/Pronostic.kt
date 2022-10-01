@@ -1,6 +1,8 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.ExpirationDayException
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -10,6 +12,9 @@ data class Pronostic(@Column val user: String,
                      @JoinColumn(name = "code",referencedColumnName = "code") var match: Match,
                      @Column var localGoals: Int, @Column var awayGoals: Int){
 
+    init {
+        validate()
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,5 +33,11 @@ data class Pronostic(@Column val user: String,
 
     fun updateMatch(match: Match){
         this.match = match
+    }
+
+    private fun validate(){
+        require(!match.date!!.isBefore(LocalDateTime.now())){
+            throw ExpirationDayException("El partido ya empezó")
+        }
     }
 }

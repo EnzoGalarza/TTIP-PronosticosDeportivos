@@ -5,9 +5,4 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-class TokenExpiredException :
-    RuntimeException(String.format(TOKEN_EXPIRED)) {
-    companion object {
-        private const val TOKEN_EXPIRED = "Token vencido"
-    }
-}
+class TokenExpiredException(override val message: String?) : Exception()

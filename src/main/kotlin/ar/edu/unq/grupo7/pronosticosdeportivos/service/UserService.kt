@@ -45,15 +45,15 @@ class UserService: UserDetailsService {
     fun registerUser(user: User) {
         val isValidEmail: Boolean = this.emailValidator.test(user.username)
         if (!isValidEmail) {
-            throw InvalidEmailException(user.username)
+            throw InvalidEmailException("El email ${user.username} no es valido")
         }
         this.signUpUser(user)
     }
 
     fun signUpUser(user: User) {
         val userExists: Boolean = userRepository.findByEmail(user.username).isPresent
-        if (userExists) {
-            throw UsedEmailException(user.username)
+        if(userExists) {
+            throw UsedEmailException("El email ${user.username} ya fué utilizado")
         }
         userRepository.save(user)
         val token = UUID.randomUUID().toString()
@@ -65,7 +65,7 @@ class UserService: UserDetailsService {
         )
         confirmationTokenService.saveConfirmationToken(confirmationToken)
         val sender = Sender(this.buildConfirmEmail(user.username, user.getName(), token))
-        sender.send()
+        sender.run()
     }
 
     private fun buildConfirmEmail(reciver: String, name: String, token: String): Email {

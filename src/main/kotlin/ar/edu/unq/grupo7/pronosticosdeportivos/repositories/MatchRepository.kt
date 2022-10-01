@@ -17,5 +17,6 @@ interface MatchRepository : JpaRepository<Match, Long> {
     @Query("SELECT * FROM partidos WHERE (match_day = ?1)", nativeQuery = true)
     fun findByMatchDay(match_day: Int) : List<Match>
 
+    @Query("SELECT * FROM partidos WHERE (code = ?1)",nativeQuery = true)
     fun findByCode(code : Long) : Match
 }

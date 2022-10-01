@@ -5,9 +5,4 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-class TokenNotFoundException :
-    RuntimeException(String.format(TOKEN_NOT_FOUND)) {
-    companion object {
-        private const val TOKEN_NOT_FOUND = "Token no encontrado"
-    }
-}
+class TokenNotFoundException(override val message: String?) : Exception()

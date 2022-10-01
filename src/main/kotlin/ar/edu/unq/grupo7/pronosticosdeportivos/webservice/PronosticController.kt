@@ -28,10 +28,4 @@ class PronosticController {
         return ResponseEntity(pronosticList,HttpStatus.CREATED)
     }
 
-    @PutMapping("/pronostics/update")
-    fun updatePronostics(@RequestBody pronosticList : MutableList<Pronostic>) : ResponseEntity<Any>{
-        pronosticService.updateGoals(pronosticList)
-        return ResponseEntity(HttpStatus.OK)
-    }
-
 }

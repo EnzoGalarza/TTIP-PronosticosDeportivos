@@ -50,13 +50,13 @@ class ConfirmationTokenService(
     @Transactional
     fun confirmToken(token: String): String {
         val confirmationToken: ConfirmationToken = getToken(token)
-            .orElseThrow(Supplier<RuntimeException> { TokenNotFoundException() })
+            .orElseThrow { TokenNotFoundException("Token no encontrado") }
         if (confirmationToken.getConfirmed()) {
             throw EmailAlreadyConfirmedException()
         }
         val expiredAt: LocalDateTime? = confirmationToken.getExpiresAt()
         if (expiredAt!!.isBefore(LocalDateTime.now())) {
-            throw TokenExpiredException()
+            throw TokenExpiredException("Token vencido")
         }
         setConfirmedAt(token)
         enableAppUser(confirmationToken.user!!.username)

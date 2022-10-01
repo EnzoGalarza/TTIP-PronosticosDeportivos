@@ -34,11 +34,4 @@ class PronosticService {
         }
         return newPronostics
     }
-
-    @Transactional
-    fun updateGoals(pronosticsToUpdate : MutableList<Pronostic>){
-        for(pronostic in pronosticsToUpdate){
-            repository.updatePronostic(pronostic.id,pronostic.localGoals,pronostic.awayGoals)
-        }
-    }
 }
