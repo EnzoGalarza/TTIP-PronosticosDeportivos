@@ -1,11 +1,9 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.email
 
-class Sender(email: Email) : Thread() {
-    var email: Email
+class Sender(msg: String?, var email: Email) : Thread(msg) {
     var controller: Controller
 
     init {
-        this.email = email
         controller = Controller()
     }
 

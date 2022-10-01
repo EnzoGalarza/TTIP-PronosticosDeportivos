@@ -16,9 +16,5 @@ interface PronosticRepository : JpaRepository<Pronostic,Long>{
     @Query("SELECT * FROM pronosticos p WHERE (p.user = ?1)", nativeQuery = true)
     fun pronosticsFromUser(user : String) : List<Pronostic>
 
-    @Modifying
-    @Query("UPDATE Pronostic p SET p.localGoals = :localGoals, p.awayGoals = :awayGoals WHERE p.id = :id")
-    fun updatePronostic(@Param("id") id : Long, @Param("localGoals") localGoals : Int, @Param("awayGoals") awayGoals : Int)
-
     fun findByUser(user : String) : List<Pronostic>
 }

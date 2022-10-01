@@ -38,4 +38,9 @@ class GlobalExceptionHandler {
         return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
     }
 
+    @ExceptionHandler(UserNotFoundException::class)
+    fun userNotFoundException(exception: UserNotFoundException) : ResponseEntity<Any>{
+        return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
+    }
+
 }
