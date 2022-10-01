@@ -3,6 +3,7 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 import ar.edu.unq.grupo7.pronosticosdeportivos.configuration.JwtUtilService
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.LoginDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.RegisterDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.InvalidPasswordException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserDisabledException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.token.WebToken
@@ -40,12 +41,19 @@ class AuthController {
 
     @PostMapping("register")
     fun register(@RequestBody register: RegisterDTO){
+        validar(register)
         val user = User()
         user.setName(register.name)
         user.setEmail(register.email)
         user.password = passwordEncoder.encode(register.password)
 
         userService.registerUser(user)
+    }
+
+    private fun validar(register: RegisterDTO) {
+        require(register.password.length >= 3) {
+            throw InvalidPasswordException("La contraseña tiene que tener al menos 3 caracteres")
+        }
     }
 
     @PostMapping("login")

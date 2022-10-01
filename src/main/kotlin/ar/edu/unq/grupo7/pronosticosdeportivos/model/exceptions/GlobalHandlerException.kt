@@ -33,4 +33,9 @@ class GlobalExceptionHandler {
         return ResponseEntity(exception.message,HttpStatus.FORBIDDEN)
     }
 
+    @ExceptionHandler(InvalidPasswordException::class)
+    fun invalidPasswordException(exception: InvalidPasswordException) : ResponseEntity<Any>{
+        return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
+    }
+
 }
