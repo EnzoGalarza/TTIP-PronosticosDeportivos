@@ -10,12 +10,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MatchRepository : JpaRepository<Match, Long> {
 
-    @Query("SELECT COUNT(*) FROM partidos\n" +
-            "WHERE (competition = ?2 AND match_day = ?1)", nativeQuery = true)
-    fun countMatchesByCompetitionAndDay(matchDay : Int, competition: String) : Int
-
-    @Query("SELECT * FROM partidos WHERE (match_day = ?1)", nativeQuery = true)
-    fun findByMatchDay(match_day: Int) : List<Match>
+    @Query("SELECT * FROM partidos WHERE (competition = ?2 AND match_day = ?1)", nativeQuery = true)
+    fun findByCompetitionAndMatchDay(matchDay : Int, competition: String) : List<Match>
 
     @Query("SELECT * FROM partidos WHERE (code = ?1)",nativeQuery = true)
     fun findByCode(code : Long) : Match

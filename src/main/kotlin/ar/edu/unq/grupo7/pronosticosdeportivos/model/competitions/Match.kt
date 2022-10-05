@@ -3,9 +3,9 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.ResultDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.ScoreDTO
+import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.*
-import java.io.Serializable
 
 @Entity
 @Table(name = "partidos")
@@ -24,4 +24,8 @@ class Match(@OneToOne(cascade = [CascadeType.ALL])
 
 fun Match.toDTO() = MatchDTO(id = code, status = status, utcDate = date!!, matchday = matchDay,homeTeam = homeTeam.toDTO(),
 awayTeam = awayTeam.toDTO(), score = ScoreDTO("",ResultDTO(localGoals,awayGoals)))
+
+/*fun Match.update(newMatch: Match) = Match(homeTeam = newMatch.homeTeam, awayTeam = newMatch.awayTeam,
+                                          date = newMatch.date, status = newMatch.status, matchDay = newMatch.matchDay,
+                                          competition = newMatch.competition)*/
 

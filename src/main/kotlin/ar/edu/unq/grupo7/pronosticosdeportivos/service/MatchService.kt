@@ -24,20 +24,34 @@ class MatchService {
     lateinit var repository : MatchRepository
 
     fun getMatches(competition: String, matchDay: Int): List<MatchDTO> {
-        if(repository.countMatchesByCompetitionAndDay(matchDay,competition) == 0){
-            var headers : HttpHeaders = HttpHeaders()
+        var matchesList: List<Match> = repository.findByCompetitionAndMatchDay(matchDay,competition);
+        val notFinished: List<Match> = matchesList.filter { it.status != "FINISHED" }
+        if(matchesList.isEmpty() || notFinished.isNotEmpty()){
+            val headers : HttpHeaders = HttpHeaders()
             headers.set("X-Auth-Token","f5bedce0ca024352a218d300e71d0798")
-            var entity = HttpEntity("parameters",headers)
+            val entity = HttpEntity("parameters",headers)
 
-            var response = restTemplate.exchange("https://api.football-data.org/v4/competitions/${competition}/matches?matchday=${matchDay}", HttpMethod.GET,entity,
+            val response = restTemplate.exchange("https://api.football-data.org/v4/competitions/${competition}/matches?matchday=${matchDay}", HttpMethod.GET,entity,
                 object : ParameterizedTypeReference<MatchListDTO>() {}
             )
-
-            repository.saveAll(response.body!!.matches.map { it.toModel(competition) })
+            if  (matchesList.size < response.body!!.matches.size){
+                matchesList = response.body!!.matches.map { it.toModel(competition) }
+            }
+            else{
+                for (match : Match in matchesList){
+                    val matchDTO : MatchDTO? = response.body!!.matches.find { it.id == match.code }
+                    if (matchDTO != null){
+                        match.status = matchDTO.status
+                        match.date = matchDTO.utcDate
+                        match.localGoals = matchDTO.score.fullTime.home
+                        match.awayGoals = matchDTO.score.fullTime.away
+                    }
+                }
+            }
+            repository.saveAll(matchesList)
             return response.body!!.matches
         }
-
-        return repository.findByMatchDay(matchDay).map { it.toDTO() }
+        return matchesList.map { it.toDTO() }
     }
 
     fun getByCode(code : Long) : Match {
