@@ -56,12 +56,13 @@ class AuthController {
         user.setName(register.name)
         user.setEmail(register.email)
         user.password = passwordEncoder.encode(register.password)
+        user.setProfileImage(register.image)
 
         userService.signUpUser(user)
     }
 
     @PostMapping("login")
-    fun login (@RequestBody login: LoginDTO): ResponseEntity<UserDetails> {
+    fun login (@RequestBody login: LoginDTO): ResponseEntity<User> {
         try{
             authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(
@@ -77,7 +78,7 @@ class AuthController {
             throw UserNotFoundException("Usuario o contraseña incorrectos")
         }
 
-        val user = userService.loadUserByUsername(login.username)
+        val user: User = userService.loadUserByUsername(login.username)
 
         var jwt: String = jwtUtilService.generateToken(user);
 

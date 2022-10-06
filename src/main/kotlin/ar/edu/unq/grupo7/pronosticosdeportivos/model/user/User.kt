@@ -22,6 +22,9 @@ class User: UserDetails {
     private var password: String = ""
 
     @Column
+    private var profileImage: String = ""
+
+    @Column
     private var enabled: Boolean = false
 
     @Enumerated(EnumType.STRING)
@@ -70,6 +73,14 @@ class User: UserDetails {
 
     fun setName(name: String){
         this.name = name
+    }
+
+    fun setProfileImage(image: String){
+        this.profileImage = image
+    }
+
+    fun getProfileImage(): String{
+        return this.profileImage
     }
 
 }

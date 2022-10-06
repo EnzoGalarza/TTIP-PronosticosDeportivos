@@ -33,7 +33,7 @@ class UserService: UserDetailsService {
     private lateinit var confirmationTokenService : ConfirmationTokenService
 
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(email: String): UserDetails {
+    override fun loadUserByUsername(email: String): User {
         return userRepository.findByEmail(email)
             .orElseThrow { UsernameNotFoundException(String.format(UserService.USER_NOT_FOUND, email)) }
     }
