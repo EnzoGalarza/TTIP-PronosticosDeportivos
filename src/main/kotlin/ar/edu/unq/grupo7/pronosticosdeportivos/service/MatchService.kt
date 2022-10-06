@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate
 @Service
 class MatchService {
 
+    val entity = GenerateHeader.generateHeader()
+
     @Autowired
     lateinit var restTemplate : RestTemplate
 
@@ -27,10 +29,6 @@ class MatchService {
         var matchesList: List<Match> = repository.findByCompetitionAndMatchDay(matchDay,competition);
         val notFinished: List<Match> = matchesList.filter { it.status != "FINISHED" }
         if(matchesList.isEmpty() || notFinished.isNotEmpty()){
-            val headers : HttpHeaders = HttpHeaders()
-            headers.set("X-Auth-Token","f5bedce0ca024352a218d300e71d0798")
-            val entity = HttpEntity("parameters",headers)
-
             val response = restTemplate.exchange("https://api.football-data.org/v4/competitions/${competition}/matches?matchday=${matchDay}", HttpMethod.GET,entity,
                 object : ParameterizedTypeReference<MatchListDTO>() {}
             )

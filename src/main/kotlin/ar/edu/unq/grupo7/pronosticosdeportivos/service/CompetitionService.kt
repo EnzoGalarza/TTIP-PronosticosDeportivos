@@ -15,6 +15,8 @@ import org.springframework.web.client.RestTemplate
 @Service
 class CompetitionService {
 
+    private val entity = GenerateHeader.generateHeader()
+
     @Autowired
     lateinit var restTemplate : RestTemplate
 
@@ -23,11 +25,7 @@ class CompetitionService {
 
     fun getCompetitions() : MutableList<Competition>{
         if(repository.count() == 0L){
-            var headers : HttpHeaders = HttpHeaders()
-            headers.set("X-Auth-Token","f5bedce0ca024352a218d300e71d0798")
-            var entity = HttpEntity("parameters",headers)
-
-            var response = restTemplate.exchange("https://api.football-data.org/v4/competitions",HttpMethod.GET,entity,
+            val response = restTemplate.exchange("https://api.football-data.org/v4/competitions",HttpMethod.GET,entity,
                 object : ParameterizedTypeReference<CompetitionsDTO>() {}
             )
             val competitions = response.body!!.competitions
@@ -40,12 +38,7 @@ class CompetitionService {
     }
 
     fun getCurrentMatchDay(competition: String) : Int{
-        var headers : HttpHeaders = HttpHeaders()
-        headers.set("X-Auth-Token","f5bedce0ca024352a218d300e71d0798")
-
-        var entity = HttpEntity("parameters",headers)
-
-        var response = restTemplate.exchange("https://api.football-data.org/v4/competitions/${competition}/",HttpMethod.GET,entity,
+        val response = restTemplate.exchange("https://api.football-data.org/v4/competitions/${competition}/",HttpMethod.GET,entity,
             object : ParameterizedTypeReference<SeasonDTO>(){}
         )
 
