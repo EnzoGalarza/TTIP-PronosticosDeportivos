@@ -1,5 +1,9 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.user
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
+import com.fasterxml.jackson.annotation.JsonIgnore
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -11,6 +15,12 @@ class User: UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Int = 0
+
+    @ManyToMany
+    @JoinColumn(name = "user_id")
+    @Cascade(*[CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST])
+    @JsonIgnore
+    val tournaments : MutableList<Tournament> = mutableListOf()
 
     @Column
     private var name = ""
@@ -81,6 +91,11 @@ class User: UserDetails {
 
     fun getProfileImage(): String{
         return this.profileImage
+    }
+
+    fun addTournament(tournament: Tournament){
+        tournaments.add(tournament)
+        tournament.addUser(this)
     }
 
 }

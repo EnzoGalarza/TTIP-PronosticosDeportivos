@@ -7,7 +7,9 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.InvalidEmailExce
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.InvalidPasswordException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserDisabledException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.token.WebToken
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.validations.EmailValidator
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.ConfirmationTokenService
@@ -100,4 +102,8 @@ class AuthController {
         return confirmationTokenService.confirmToken(token)
     }
 
+    @GetMapping("/tournaments/{user}")
+    fun getUserTournaments(@PathVariable("user") user : String) : List<Tournament>{
+        return userService.tournamentsFromUser(user)
+    }
 }
