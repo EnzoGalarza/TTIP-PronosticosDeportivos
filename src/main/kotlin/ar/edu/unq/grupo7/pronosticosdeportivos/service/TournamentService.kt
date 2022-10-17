@@ -26,7 +26,7 @@ class TournamentService {
             val createdTournament = tournament.toModel()
             for(userEmail in tournament.usersEmail){
                 val getUser = userRepository.findByEmail(userEmail).get()
-                getUser.addTournament(createdTournament)
+                createdTournament.addUser(getUser)
             }
             return tournamentRepository.save(createdTournament)
         } catch (e:NoSuchElementException){
@@ -34,8 +34,9 @@ class TournamentService {
         }
     }
 
-    fun getTournaments() : List<Tournament>{
-        return tournamentRepository.findAll()
+    fun getTournamentsFromUser(user : String) : List<Tournament>{
+        val getUser = userRepository.findByEmail(user).get()
+        return tournamentRepository.findByUserId(getUser.id)
     }
 
 }

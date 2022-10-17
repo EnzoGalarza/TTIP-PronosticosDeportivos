@@ -21,9 +21,9 @@ class TournamentController {
         return ResponseEntity(tournament,HttpStatus.CREATED)
     }
 
-    @GetMapping("/tournaments")
-    fun getTournaments() : ResponseEntity<List<Tournament>>{
-        val tournaments = tournamentService.getTournaments()
+    @GetMapping("/tournaments/{user}")
+    fun getTournaments(@PathVariable("user") user : String) : ResponseEntity<List<Tournament>>{
+        val tournaments = tournamentService.getTournamentsFromUser(user)
         return ResponseEntity(tournaments,HttpStatus.OK)
     }
 }

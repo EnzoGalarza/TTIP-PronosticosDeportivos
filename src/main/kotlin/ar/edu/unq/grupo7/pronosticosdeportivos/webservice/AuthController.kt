@@ -101,9 +101,4 @@ class AuthController {
     fun confirm(@RequestParam("token") token: String): String? {
         return confirmationTokenService.confirmToken(token)
     }
-
-    @GetMapping("/tournaments/{user}")
-    fun getUserTournaments(@PathVariable("user") user : String) : List<Tournament>{
-        return userService.tournamentsFromUser(user)
-    }
 }

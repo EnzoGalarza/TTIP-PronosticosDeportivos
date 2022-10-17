@@ -1,8 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
-import org.hibernate.annotations.Cascade
-import org.hibernate.annotations.CascadeType
 import javax.persistence.*
 
 @Entity
@@ -12,8 +10,10 @@ class Tournament(@Column val name : String, @Column val competition : String) {
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Int = 0
 
-    @ManyToMany(mappedBy = "tournaments")
-    @Cascade(*[CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST])
+    @ManyToMany(cascade = [CascadeType.ALL])
+    @JoinTable(name="Tournament_User",
+        joinColumns=[JoinColumn(name="tournamentId")],
+        inverseJoinColumns=[JoinColumn(name="userId")])
     var users : MutableList<User> = mutableListOf()
 
     fun addUser(user: User){

@@ -5,11 +5,9 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.MessageBuilder
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Sender
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UsedEmailException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.token.ConfirmationToken
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
@@ -37,11 +35,6 @@ class UserService: UserDetailsService {
     override fun loadUserByUsername(email: String): User {
         return userRepository.findByEmail(email)
             .orElseThrow { UsernameNotFoundException(String.format(UserService.USER_NOT_FOUND, email)) }
-    }
-
-    fun tournamentsFromUser(user : String) : List<Tournament> {
-        val savedUser = userRepository.findByEmail(user).get()
-        return savedUser.tournaments
     }
 
     fun signUpUser(user: User) {
