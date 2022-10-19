@@ -7,21 +7,17 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.InvalidEmailExce
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.InvalidPasswordException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserDisabledException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.token.WebToken
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.validations.EmailValidator
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.ConfirmationTokenService
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 

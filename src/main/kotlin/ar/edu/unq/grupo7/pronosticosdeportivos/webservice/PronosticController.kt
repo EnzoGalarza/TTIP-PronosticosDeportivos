@@ -1,16 +1,13 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
-import ar.edu.unq.grupo7.pronosticosdeportivos.service.MatchService
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.PronosticService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@EnableAutoConfiguration
 @CrossOrigin
 class PronosticController {
 
