@@ -1,41 +1,55 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TeamDTO
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchDTO
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.ResultDTO
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.ScoreDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.builders.MatchBuilder
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.toDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.MatchService
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.http.HttpStatus
-import java.time.LocalDateTime
+import org.mockito.Mockito.`when`
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.MediaType
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
-@ExtendWith(MockitoExtension::class)
-class MatchControllerTest(@Mock val matchService : MatchService) {
+@ExtendWith(SpringExtension::class)
+@ContextConfiguration(classes = [MatchController::class])
+@WebAppConfiguration
+class MatchControllerTest {
 
-    @InjectMocks
+    @Autowired
     lateinit var matchController : MatchController
 
+    @MockBean
+    lateinit var matchService : MatchService
+
+    private var mockMvc: MockMvc? = null
+
+    private val matchBuilder : MatchBuilder = MatchBuilder()
+
+    @BeforeEach
+    @Throws(Exception::class)
+    fun setup() {
+        mockMvc = MockMvcBuilders.standaloneSetup(matchController).build()
+    }
+
     @Test
-    fun getMatchsOfCompetitionPL(){
-        val date = LocalDateTime.now().minusDays(2)
-        val eq1 = TeamDTO("Manchester United","MUN","logoMun")
-        val eq2 = TeamDTO("Southampton FC","SOU","logoSou")
-        val eq3 = TeamDTO("Aston Villa FC","SOU","logoSou")
-        val score = ScoreDTO("DRAW", ResultDTO(1,2))
-        val partido1 = MatchDTO(1,"FINISHED",date,25,eq1,eq2,score)
-        val partido2 = MatchDTO(2,"FINISHED",date,30,eq1,eq3,score)
+    fun getMatchesOfCompetitionPL(){
+        val match1 = matchBuilder.withCode(1).build()
+        val match2 = matchBuilder.withCode(5).build()
 
-        Mockito.`when`(matchService.getMatches("PL",1)).thenReturn(mutableListOf(partido1,partido2))
-
-        var todosLosPartidos = matchController.getMatches("PL",1)
-
-        assertEquals(mutableListOf(partido1,partido2),todosLosPartidos.body)
-        assertEquals(HttpStatus.OK,todosLosPartidos.statusCode)
+        `when`(matchService.getMatches("PL",1)).thenReturn(mutableListOf(match1.toDTO(),match2.toDTO()))
+        mockMvc!!.perform(get("/matches/{competition}/{matchDay}","PL",1))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].id").value(1))
+            .andExpect(jsonPath("$[1].id").value(5))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
     }
 }

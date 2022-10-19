@@ -1,50 +1,79 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
+import ar.edu.unq.grupo7.pronosticosdeportivos.builders.PronosticBuilder
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.PronosticService
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.http.HttpStatus
+import org.mockito.Mockito.`when`
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.MediaType
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
-@ExtendWith(MockitoExtension::class)
-class PronosticControllerTest(@Mock val pronosticService : PronosticService) {
 
-    @InjectMocks
+@ExtendWith(SpringExtension::class)
+@ContextConfiguration(classes = [PronosticController::class])
+@WebAppConfiguration
+class PronosticControllerTest {
+
+    @Autowired
     lateinit var pronosticController: PronosticController
 
-    @Mock private lateinit var pronostic1 : Pronostic
-    @Mock private lateinit var pronostic2 : Pronostic
+    @MockBean
+    lateinit var pronosticService : PronosticService
+
+    private var mockMvc: MockMvc? = null
+    private val mapper = ObjectMapper()
+
+    private val pronosticBuilder = PronosticBuilder()
+    private lateinit var pronostic1 : Pronostic
+    private lateinit var pronostic2 : Pronostic
+
+    @BeforeEach
+    @Throws(Exception::class)
+    fun setup() {
+        pronostic1 = pronosticBuilder.withUsername("jose").build()
+        pronostic2 = pronosticBuilder.withUsername("pedro").build()
+        mockMvc = MockMvcBuilders.standaloneSetup(pronosticController).build()
+        mapper.registerModule(JavaTimeModule())
+    }
 
 
     @Test
     fun registerPronostics(){
         val pronosticsToSave = mutableListOf(pronostic1,pronostic2)
 
-        Mockito.`when`(pronosticService.saveAll(pronosticsToSave)).thenReturn(mutableListOf(pronostic1,pronostic2))
+        `when`(pronosticService.saveAll(pronosticsToSave)).thenReturn(mutableListOf(pronostic1,pronostic2))
 
-        val obtainedPronostics = pronosticController.registerPronostics(pronosticsToSave)
-
-        assertEquals(obtainedPronostics.body,pronosticsToSave)
-        assertEquals(obtainedPronostics.statusCode,HttpStatus.CREATED)
+        mockMvc!!.perform(post("/pronostics")
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(mapper.writeValueAsBytes(pronosticsToSave)))
+            .andExpect(status().isCreated)
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].user").value("jose"))
+            .andExpect(jsonPath("$[1].user").value("pedro"))
     }
 
     @Test
     fun getAllPronosticsFromUser(){
-        Mockito.`when`(pronosticService.pronosticsFromUser("jose")).thenReturn(listOf(pronostic1))
+        `when`(pronosticService.pronosticsFromUser("jose")).thenReturn(listOf(pronostic1))
 
-        val todosLosPronosticos = listOf(pronostic1,pronostic2)
-        val pronosticosDeJose = pronosticController.getPronosticsFromUser("jose")
-
-        assertEquals(1,pronosticosDeJose.size)
-        assertEquals(listOf(pronostic1), pronosticosDeJose)
-        assertNotEquals(todosLosPronosticos,pronosticosDeJose)
+        mockMvc!!.perform(get("/pronostics/{user}","jose"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].user").value("jose"))
     }
 
 }
