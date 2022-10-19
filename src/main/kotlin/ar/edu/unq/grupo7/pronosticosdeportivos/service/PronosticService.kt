@@ -23,6 +23,7 @@ class PronosticService {
     fun saveAll(pronosticList: List<Pronostic>) : List<Pronostic>{
         var newPronostics : MutableList<Pronostic> = mutableListOf()
         for(pronostic in pronosticList){
+            pronostic.validate()
             var savedPronostic = repository.findById(pronostic.id)
             if(savedPronostic.isPresent){
                 savedPronostic.get().updateGoals(pronostic)

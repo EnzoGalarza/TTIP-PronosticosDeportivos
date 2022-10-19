@@ -12,10 +12,6 @@ data class Pronostic(@Column val user: String,
                      @JoinColumn(name = "code",referencedColumnName = "code") var match: Match,
                      @Column var localGoals: Int, @Column var awayGoals: Int){
 
-    init {
-        validate()
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id : Long = 0
@@ -35,7 +31,7 @@ data class Pronostic(@Column val user: String,
         this.match = match
     }
 
-    private fun validate(){
+    fun validate(){
         require(!match.date!!.isBefore(LocalDateTime.now())){
             throw ExpirationDayException("El partido ya empezó")
         }

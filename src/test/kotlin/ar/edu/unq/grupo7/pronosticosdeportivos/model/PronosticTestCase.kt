@@ -5,7 +5,6 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.ExpirationDayExc
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -18,11 +17,6 @@ class PronosticTestCase {
 
     @Mock
     private lateinit var match : Match
-
-    @BeforeEach
-    fun setUp(){
-        Mockito.`when`(match.date).thenReturn(LocalDateTime.now().plusDays(2))
-    }
 
     @Test
     fun pronosticHasAUserAMatchALocalTeamGoalsAndAwayTeamGoals(){
@@ -49,11 +43,12 @@ class PronosticTestCase {
     }
 
     @Test
-    fun pronosticShouldFailWithExpirationDayExceptionIfMatchHasEnded(){
+    fun pronosticValidateShouldFailWithExpirationDayExceptionIfMatchHasEnded(){
         Mockito.`when`(match.date).thenReturn(LocalDateTime.now().minusDays(2))
+        val pronostic = Pronostic("nombre_usuario",match,1,0)
 
         assertThrows(ExpirationDayException::class.java){
-            val pronostic = Pronostic("nombre_usuario",match,1,0)
+            pronostic.validate()
         }
     }
 
