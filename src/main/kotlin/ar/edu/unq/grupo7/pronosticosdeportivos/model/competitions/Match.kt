@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "partidos")
+@Table(name = "match")
 class Match(@OneToOne(cascade = [CascadeType.ALL])
             var homeTeam : Team,
             @OneToOne(cascade = [CascadeType.ALL])
