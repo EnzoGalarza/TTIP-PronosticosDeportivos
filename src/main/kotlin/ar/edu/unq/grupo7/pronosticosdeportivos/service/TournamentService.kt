@@ -4,7 +4,6 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TournamentRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,6 +18,9 @@ class TournamentService {
 
     @Autowired
     private lateinit var userRepository : UserRepository
+
+    @Autowired
+    private lateinit var pronosticService: PronosticService
 
     @Transactional
     fun saveTournament(tournament: TournamentDTO) : Tournament{
@@ -37,6 +39,27 @@ class TournamentService {
     fun getTournamentsFromUser(user : String) : List<Tournament>{
         val getUser = userRepository.findByEmail(user).get()
         return tournamentRepository.findByUserId(getUser.id)
+    }
+
+    @Transactional
+    fun updateTournament(tournamentId : Long){
+        val tournament = tournamentRepository.findById(tournamentId).get()
+        for(user in tournament.users){
+            val pronosticsFromUser = pronosticService.notEvaluatedPronostics(user.user.username,tournament.competition,tournamentId)
+            for(pronostic in pronosticsFromUser){
+                tournament.addEvaluatedPronostic(pronostic.id)
+                for(criteria in tournament.criterias){
+                    val tournamentCriteria = tournament.getCriteria(criteria.name)
+                    if(tournamentCriteria.eval(pronostic.localGoals,pronostic.awayGoals,
+                            pronostic.match.localGoals!!,pronostic.match.awayGoals!!)){
+                        user.sumPoints(criteria.score)
+
+                    }
+                }
+            }
+
+        }
+        tournamentRepository.save(tournament)
     }
 
 }

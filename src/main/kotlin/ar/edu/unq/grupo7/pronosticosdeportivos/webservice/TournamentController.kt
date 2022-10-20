@@ -26,4 +26,9 @@ class TournamentController {
         val tournaments = tournamentService.getTournamentsFromUser(user)
         return ResponseEntity(tournaments,HttpStatus.OK)
     }
+
+    @PutMapping("/tournaments/update/{tournamentId}")
+    fun updateTournament(@PathVariable("tournamentId") tournamentId : Long){
+        tournamentService.updateTournament(tournamentId)
+    }
 }

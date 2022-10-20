@@ -12,8 +12,8 @@ interface TournamentRepository : JpaRepository<Tournament,Long>{
 
     @Query("SELECT * FROM tournament\n" +
             "INNER JOIN tournament_user on tournament.id = tournament_user.tournament_id\n" +
-            "INNER JOIN public.\"user\" on tournament_user.user_id = public.\"user\".id\n" +
-            "WHERE tournament_user.user_id = ?1", nativeQuery = true)
-    fun findByUserId(id: Int): List<Tournament>
+            "INNER JOIN user_score on tournament_user.user_score_id = user_score.id\n" +
+            "WHERE user_score.user_score_id = ?1", nativeQuery = true)
+    fun findByUserId(id: Long): List<Tournament>
 
 }

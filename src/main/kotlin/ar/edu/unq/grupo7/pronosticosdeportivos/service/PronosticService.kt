@@ -15,15 +15,19 @@ class PronosticService {
     @Autowired
     private lateinit var matchService : MatchService
 
-    fun pronosticsFromUser(user:String) : List<Pronostic>{
-        return repository.findByUser(user)
+    fun pronosticsFromUser(user:String, competition : String) : List<Pronostic>{
+        return repository.findByUserAndCompetition(user,competition)
+    }
+
+    fun notEvaluatedPronostics(user: String,competition: String,tournamentId : Long) : List<Pronostic>{
+        return repository.findNotEvaluatedPronostics(user,competition,tournamentId)
     }
 
     @Transactional
     fun saveAll(pronosticList: List<Pronostic>) : List<Pronostic>{
         var newPronostics : MutableList<Pronostic> = mutableListOf()
         for(pronostic in pronosticList){
-            pronostic.validate()
+            //pronostic.validate()
             var savedPronostic = repository.findById(pronostic.id)
             if(savedPronostic.isPresent){
                 savedPronostic.get().updateGoals(pronostic)

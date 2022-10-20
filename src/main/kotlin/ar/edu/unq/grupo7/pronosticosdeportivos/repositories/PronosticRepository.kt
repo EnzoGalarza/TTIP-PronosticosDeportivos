@@ -13,8 +13,17 @@ import java.util.*
 @Repository
 interface PronosticRepository : JpaRepository<Pronostic,Long>{
 
-    @Query("SELECT * FROM pronosticos p WHERE (p.user = ?1)", nativeQuery = true)
-    fun pronosticsFromUser(user : String) : List<Pronostic>
+    @Query("SELECT * FROM pronostic\n" +
+            "INNER JOIN match on match.id = pronostic.match_id\n" +
+            "WHERE pronostic.user = ?1 AND match.competition = ?2",nativeQuery = true)
+    fun findByUserAndCompetition(user : String, competition : String) : List<Pronostic>
 
-    fun findByUser(user : String) : List<Pronostic>
+    @Query("SELECT * FROM pronostic\n" +
+            "INNER JOIN match on match.id = pronostic.match_id\n" +
+            "WHERE pronostic.user = ?1 AND match.competition = ?2 \n" +
+            "AND pronostic.id NOT IN (\n" +
+            "    SELECT pronostic_id FROM evaluated_pronostic\n" +
+            "    WHERE tournament_id = ?3 \n" +
+            ")",nativeQuery = true)
+    fun findNotEvaluatedPronostics(user: String, competition: String, tournamentId: Long): List<Pronostic>
 }
