@@ -67,9 +67,9 @@ class PronosticControllerTest {
 
     @Test
     fun getAllPronosticsFromUser(){
-        `when`(pronosticService.pronosticsFromUser("jose")).thenReturn(listOf(pronostic1))
+        `when`(pronosticService.pronosticsFromUser("jose","PD")).thenReturn(listOf(pronostic1))
 
-        mockMvc!!.perform(get("/pronostics/{user}","jose"))
+        mockMvc!!.perform(get("/pronostics/{user}/{competition}","jose","PD"))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.length()").value(1))

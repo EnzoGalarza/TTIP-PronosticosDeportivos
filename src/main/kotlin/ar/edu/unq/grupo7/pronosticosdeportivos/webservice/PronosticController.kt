@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.websocket.server.PathParam
 
 @RestController
 @CrossOrigin
@@ -14,9 +15,9 @@ class PronosticController {
     @Autowired
     private lateinit var pronosticService: PronosticService
 
-    @GetMapping(value = ["/pronostics/{user}"])
-    fun getPronosticsFromUser(@PathVariable("user") user : String) : List<Pronostic>{
-         return pronosticService.pronosticsFromUser(user)
+    @GetMapping(value = ["/pronostics/{user}/{competition}"])
+    fun getPronosticsFromUser(@PathVariable("user") user : String,@PathVariable("competition") competition : String) : ResponseEntity<List<Pronostic>>{
+         return ResponseEntity(pronosticService.pronosticsFromUser(user,competition),HttpStatus.OK)
     }
 
     @PostMapping("/pronostics")
