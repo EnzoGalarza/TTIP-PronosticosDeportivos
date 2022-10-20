@@ -10,7 +10,7 @@ class User: UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Int = 0
+    var id: Long = 0
 
     @Column
     private var name = ""
@@ -25,7 +25,7 @@ class User: UserDetails {
     private var profileImage: String = ""
 
     @Column
-    private var enabled: Boolean = false
+    private var enabled: Boolean = true
 
     @Enumerated(EnumType.STRING)
     private val role: UserRole = UserRole.USER
