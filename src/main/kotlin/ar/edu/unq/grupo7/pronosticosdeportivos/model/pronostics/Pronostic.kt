@@ -6,10 +6,10 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "pronosticos")
+@Table(name = "pronostic")
 data class Pronostic(@Column val user: String,
                      @OneToOne(cascade = [CascadeType.ALL])
-                     @JoinColumn(name = "code",referencedColumnName = "code") var match: Match,
+                     @JoinColumn(name = "matchId",referencedColumnName = "id") var match: Match,
                      @Column var localGoals: Int, @Column var awayGoals: Int){
 
     @Id
