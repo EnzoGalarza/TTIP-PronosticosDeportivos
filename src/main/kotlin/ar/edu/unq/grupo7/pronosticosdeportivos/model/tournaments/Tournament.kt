@@ -46,6 +46,9 @@ class Tournament(@Column val name : String,
     }
 
     fun validate(){
+        require(name.length > 3){
+            throw TournamentNameLengthException("El tamaño mínimo del nombre son 3 caracteres")
+        }
         require(name.length <= 20){
             throw TournamentNameLengthException("El tamaño máximo del nombre son 20 caracteres")
         }
