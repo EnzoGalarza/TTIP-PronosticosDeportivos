@@ -1,5 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.user
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.InvalidNameException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -81,6 +82,12 @@ class User: UserDetails {
 
     fun getProfileImage(): String{
         return this.profileImage
+    }
+
+    fun validate() {
+        require(name.length > 3){
+            throw InvalidNameException("El nombre del usuario debe tener por lo menos 3 caracteres")
+        }
     }
 
 }

@@ -42,7 +42,7 @@ class Controller {
             t.sendMessage(message, message.getAllRecipients())
             t.close()
         } catch (e: Exception) {
-            throw EmailSendErrorException(e)
+            throw EmailSendErrorException("Error en el envio de email")
         }
     }
 }

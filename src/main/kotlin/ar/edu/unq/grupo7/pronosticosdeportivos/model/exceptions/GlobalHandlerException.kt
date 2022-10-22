@@ -8,39 +8,29 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
 class GlobalExceptionHandler {
-    @ExceptionHandler(ExpirationDayException::class)
-    fun expirationDayException(exception: ExpirationDayException) : ResponseEntity<Any>{
+
+    @ExceptionHandler(ExpirationDayException::class,UsedEmailException::class,
+        InvalidEmailException::class, TokenNotFoundException::class,
+        UserNotFoundException::class, InvalidPasswordException::class,
+        InvalidNameException::class, EmailAlreadyConfirmedException::class,
+        MatchNotFoundException::class)
+    fun handleBadRequest(exception : Exception) : ResponseEntity<Any>{
         return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(UsedEmailException::class)
-    fun usedEmailException(exception: UsedEmailException) : ResponseEntity<Any>{
-        return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
-    }
-
-    @ExceptionHandler(InvalidEmailException::class)
-    fun invalidEmailException(exception: InvalidEmailException) : ResponseEntity<Any>{
-        return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
-    }
-
-    @ExceptionHandler(TokenNotFoundException::class)
-    fun tokenNotFoundException(exception: TokenNotFoundException) : ResponseEntity<Any>{
-        return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(TournamentNotFoundException::class)
+    fun handleNotFound(exception : Exception) : ResponseEntity<Any>{
+        return ResponseEntity(exception.message,HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(UserDisabledException::class)
-    fun tokenNotFoundException(exception: UserDisabledException) : ResponseEntity<Any>{
+    fun handleForbidden(exception: UserDisabledException) : ResponseEntity<Any>{
         return ResponseEntity(exception.message,HttpStatus.FORBIDDEN)
     }
 
-    @ExceptionHandler(InvalidPasswordException::class)
-    fun invalidPasswordException(exception: InvalidPasswordException) : ResponseEntity<Any>{
-        return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
-    }
-
-    @ExceptionHandler(UserNotFoundException::class)
-    fun userNotFoundException(exception: UserNotFoundException) : ResponseEntity<Any>{
-        return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EmailSendErrorException::class)
+    fun handleServerError(exception : EmailSendErrorException) : ResponseEntity<Any>{
+        return ResponseEntity(exception,HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
 }

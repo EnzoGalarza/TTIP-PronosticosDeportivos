@@ -1,5 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNameLengthException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.*
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import javax.persistence.*
@@ -42,6 +43,12 @@ class Tournament(@Column val name : String,
 
     fun addEvaluatedPronostic(id: Long) {
         this.evaluatedPronostic.add(EvaluatedPronostic(id))
+    }
+
+    fun validate(){
+        require(name.length <= 20){
+            throw TournamentNameLengthException("El tamaño máximo del nombre son 20 caracteres")
+        }
     }
 
 }
