@@ -14,6 +14,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.service.ConfirmationTokenService
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.DisabledException
@@ -96,5 +97,12 @@ class AuthController {
     @GetMapping(path = ["confirmToken"])
     fun confirm(@RequestParam("token") token: String): String? {
         return confirmationTokenService.confirmToken(token)
+    }
+
+    @GetMapping("users/{user}")
+    fun getUsersEmails(@PathVariable("user") userEmail : String) : ResponseEntity<List<String>>{
+        val usersEmail = userService.getUsersEmails(userEmail)
+
+        return ResponseEntity(usersEmail,HttpStatus.OK)
     }
 }

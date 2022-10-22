@@ -19,4 +19,7 @@ interface UserRepository: JpaRepository<User, Int> {
     )
     fun enableAppUser(email: String?): Int
 
+    @Query("SELECT email FROM public.user WHERE email <> ?1", nativeQuery = true)
+    fun findUsersEmail(user: String): List<String>
+
 }

@@ -42,6 +42,7 @@ class UserService: UserDetailsService {
         if(userExists) {
             throw UsedEmailException("El email ${user.username} ya fué utilizado")
         }
+        user.validate()
         userRepository.save(user)
         val token = UUID.randomUUID().toString()
         val confirmationToken = ConfirmationToken(
@@ -60,6 +61,10 @@ class UserService: UserDetailsService {
         val link = "http://localhost:8080/confirmToken?token=$token"
         email.composeEmailWith("Confirmá tu email", reciver, messageBuilder.confirmEmailMessage(name, link))
         return email
+    }
+
+    fun getUsersEmails(user: String): List<String> {
+        return userRepository.findUsersEmail(user)
     }
 
 }
