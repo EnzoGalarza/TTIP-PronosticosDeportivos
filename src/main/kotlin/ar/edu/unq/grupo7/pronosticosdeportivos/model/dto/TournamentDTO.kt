@@ -6,4 +6,4 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 data class TournamentDTO(val name : String, val competition : String, val creator : String, val usersEmail : List<String>,
                          val criteria : List<Criteria>)
 
-fun TournamentDTO.toModel() = Tournament(name = name, competition = competition, listOf(Criteria("Complete",3)))
+fun TournamentDTO.toModel() = Tournament(name = name, competition = competition, criterias = criteria)
