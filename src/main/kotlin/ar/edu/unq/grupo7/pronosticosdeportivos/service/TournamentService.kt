@@ -2,6 +2,7 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TournamentRepository
@@ -26,6 +27,7 @@ class TournamentService {
     fun saveTournament(tournament: TournamentDTO) : Tournament{
         try {
             val createdTournament = tournament.toModel()
+            createdTournament.validate()
             for(userEmail in tournament.usersEmail){
                 val getUser = userRepository.findByEmail(userEmail).get()
                 createdTournament.addUser(getUser)
@@ -53,11 +55,24 @@ class TournamentService {
                     if(tournamentCriteria.eval(pronostic.localGoals,pronostic.awayGoals,
                             pronostic.match.localGoals!!,pronostic.match.awayGoals!!)){
                         user.sumPoints(criteria.score)
-
                     }
                 }
             }
 
+        }
+        tournamentRepository.save(tournament)
+    }
+
+    @Transactional
+    fun inviteUsers(tournamentId: Long, users: List<String>) {
+        val tournament = tournamentRepository.findById(tournamentId).orElseThrow {
+            throw TournamentNotFoundException("No se encontró el torneo")
+        }
+        for(userEmail in users){
+            val user = userRepository.findByEmail(userEmail).orElseThrow {
+                throw UserNotFoundException("Usuario ${userEmail} no se encuentra registrado")
+            }
+            tournament.addUser(user)
         }
         tournamentRepository.save(tournament)
     }

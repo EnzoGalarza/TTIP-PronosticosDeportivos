@@ -31,4 +31,10 @@ class TournamentController {
     fun updateTournament(@PathVariable("tournamentId") tournamentId : Long){
         tournamentService.updateTournament(tournamentId)
     }
+
+    @PutMapping("/tournaments/{tournamentId}")
+    fun inviteUsersToTournament(@PathVariable("tournamentId") tournamentId: Long, @RequestBody users : List<String>) : ResponseEntity<Any>{
+        tournamentService.inviteUsers(tournamentId,users)
+        return ResponseEntity(HttpStatus.OK)
+    }
 }
