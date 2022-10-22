@@ -5,11 +5,10 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchListDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.toDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.MatchNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -53,7 +52,7 @@ class MatchService {
     }
 
     fun getByCode(code : Long) : Match {
-        return repository.findByCode(code)
+        return repository.findByCode(code).orElseThrow { MatchNotFoundException("No se encontró el partido que quiere pronosticar") }
     }
 
 }

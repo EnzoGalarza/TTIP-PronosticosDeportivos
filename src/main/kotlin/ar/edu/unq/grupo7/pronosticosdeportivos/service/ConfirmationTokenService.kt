@@ -52,7 +52,7 @@ class ConfirmationTokenService(
         val confirmationToken: ConfirmationToken = getToken(token)
             .orElseThrow { TokenNotFoundException("Token no encontrado") }
         if (confirmationToken.getConfirmed()) {
-            throw EmailAlreadyConfirmedException()
+            throw EmailAlreadyConfirmedException("El token ya fué confirmado")
         }
         val expiredAt: LocalDateTime? = confirmationToken.getExpiresAt()
         if (expiredAt!!.isBefore(LocalDateTime.now())) {
