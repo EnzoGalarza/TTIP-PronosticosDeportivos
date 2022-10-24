@@ -22,4 +22,9 @@ class PronosticBuilder(
         return this
     }
 
+    fun withMatch(match: Match): PronosticBuilder {
+        this.match = match
+        return this
+    }
+
 }

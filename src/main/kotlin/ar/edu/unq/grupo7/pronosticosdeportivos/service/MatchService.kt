@@ -7,6 +7,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.toDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.MatchNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
+import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TeamRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
@@ -23,6 +24,9 @@ class MatchService {
 
     @Autowired
     lateinit var repository : MatchRepository
+
+    @Autowired
+    lateinit var teamRepository: TeamRepository
 
     fun getMatches(competition: String, matchDay: Int): List<MatchDTO> {
         var matchesList: List<Match> = repository.findByCompetitionAndMatchDay(matchDay,competition);

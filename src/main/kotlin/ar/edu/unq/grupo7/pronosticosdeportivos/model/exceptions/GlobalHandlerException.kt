@@ -12,13 +12,13 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ExpirationDayException::class,UsedEmailException::class,
         InvalidEmailException::class, TokenNotFoundException::class,
         UserNotFoundException::class, InvalidPasswordException::class,
-        InvalidNameException::class, EmailAlreadyConfirmedException::class,
-        MatchNotFoundException::class)
+        InvalidNameException::class, EmailAlreadyConfirmedException::class)
     fun handleBadRequest(exception : Exception) : ResponseEntity<Any>{
         return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(TournamentNotFoundException::class)
+    @ExceptionHandler(TournamentNotFoundException::class,
+        MatchNotFoundException::class)
     fun handleNotFound(exception : Exception) : ResponseEntity<Any>{
         return ResponseEntity(exception.message,HttpStatus.NOT_FOUND)
     }
