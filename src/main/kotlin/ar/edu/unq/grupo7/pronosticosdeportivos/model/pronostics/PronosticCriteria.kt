@@ -1,44 +1,39 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import kotlin.math.absoluteValue
 
 interface PronosticCriteria {
-    fun eval(predictionLocalGoals : Int,predictionAwayGoals : Int, matchLocalGoals : Int, matchAwayGoals : Int) : Boolean
+    fun eval(pronostic: Pronostic, match : Match) : Boolean
 }
 
 object CompleteResult : PronosticCriteria{
     override fun eval(
-        predictionLocalGoals: Int,
-        predictionAwayGoals: Int,
-        matchLocalGoals: Int,
-        matchAwayGoals: Int
+        pronostic: Pronostic,
+        match : Match
     ): Boolean {
-        return predictionLocalGoals == matchLocalGoals && predictionAwayGoals == matchAwayGoals
+        return pronostic.localGoals == match.localGoals!! && pronostic.awayGoals == match.awayGoals!!
     }
 
 }
 
 object PartialResult : PronosticCriteria{
     override fun eval(
-        predictionLocalGoals: Int,
-        predictionAwayGoals: Int,
-        matchLocalGoals: Int,
-        matchAwayGoals: Int
+        pronostic: Pronostic,
+        match : Match
     ): Boolean {
-        return predictionLocalGoals == matchLocalGoals || predictionAwayGoals == matchAwayGoals
+        return pronostic.localGoals == match.localGoals!! || pronostic.awayGoals == match.awayGoals!!
     }
 }
 
 object WinnerOrTie : PronosticCriteria{
     override fun eval(
-        predictionLocalGoals: Int,
-        predictionAwayGoals: Int,
-        matchLocalGoals: Int,
-        matchAwayGoals: Int
+        pronostic: Pronostic,
+        match : Match
     ): Boolean {
-        val winnerLocal = predictionLocalGoals > predictionAwayGoals && matchLocalGoals > matchAwayGoals
-        val winnerAway = predictionLocalGoals < predictionAwayGoals && matchLocalGoals < matchAwayGoals
-        val tie = predictionLocalGoals == predictionAwayGoals && matchLocalGoals == matchAwayGoals
+        val winnerLocal = pronostic.localGoals > pronostic.awayGoals && match.localGoals!! > match.awayGoals!!
+        val winnerAway = pronostic.localGoals < pronostic.awayGoals && match.localGoals!! < match.awayGoals!!
+        val tie = pronostic.localGoals == pronostic.awayGoals && match.localGoals!! == match.awayGoals!!
         return winnerLocal || winnerAway || tie
     }
 
@@ -46,13 +41,11 @@ object WinnerOrTie : PronosticCriteria{
 
 object Approach : PronosticCriteria{
     override fun eval(
-        predictionLocalGoals: Int,
-        predictionAwayGoals: Int,
-        matchLocalGoals: Int,
-        matchAwayGoals: Int
+        pronostic: Pronostic,
+        match : Match
     ): Boolean {
-        val localDifference = (predictionLocalGoals - matchLocalGoals).absoluteValue
-        val awayDifference = (predictionAwayGoals - matchAwayGoals).absoluteValue
+        val localDifference = (pronostic.localGoals - match.localGoals!!).absoluteValue
+        val awayDifference = (pronostic.awayGoals - match.awayGoals!!).absoluteValue
 
         return localDifference <= 2 && awayDifference <= 2
     }

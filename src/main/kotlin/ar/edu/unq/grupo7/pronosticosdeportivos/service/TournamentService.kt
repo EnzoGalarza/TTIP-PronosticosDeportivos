@@ -52,8 +52,7 @@ class TournamentService {
                 tournament.addEvaluatedPronostic(pronostic.id)
                 for(criteria in tournament.criterias){
                     val tournamentCriteria = tournament.getCriteria(criteria.name)
-                    if(tournamentCriteria.eval(pronostic.localGoals,pronostic.awayGoals,
-                            pronostic.match.localGoals!!,pronostic.match.awayGoals!!)){
+                    if(tournamentCriteria.eval(pronostic, pronostic.match)){
                         user.sumPoints(criteria.score)
                     }
                 }

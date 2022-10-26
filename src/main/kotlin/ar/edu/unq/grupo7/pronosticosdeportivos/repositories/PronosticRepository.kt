@@ -20,7 +20,9 @@ interface PronosticRepository : JpaRepository<Pronostic,Long>{
 
     @Query("SELECT * FROM pronostic\n" +
             "INNER JOIN match on match.id = pronostic.match_id\n" +
-            "WHERE pronostic.user = ?1 AND match.competition = ?2 \n" +
+            "WHERE pronostic.user = ?1 \n" +
+            "AND match.competition = ?2 \n" +
+            "AND match.status = 'FINISHED' \n" +
             "AND pronostic.id NOT IN (\n" +
             "    SELECT pronostic_id FROM evaluated_pronostic\n" +
             "    WHERE tournament_id = ?3 \n" +
