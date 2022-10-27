@@ -5,6 +5,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.builders.TeamBuilder
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.toDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchListDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
+import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.PronosticRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TeamRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.GenerateHeader
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.MatchService
@@ -39,6 +40,9 @@ class MatchControllerTest {
     lateinit var matchRepository: MatchRepository
 
     @Autowired
+    lateinit var pronosticRepository: PronosticRepository
+
+    @Autowired
     private lateinit var mockMvc: MockMvc
 
     @MockBean
@@ -50,7 +54,9 @@ class MatchControllerTest {
     @BeforeEach
     @Throws(Exception::class)
     fun setup() {
-        matchRepository.deleteAllInBatch()
+        pronosticRepository.deleteAll()
+        matchRepository.deleteAll()
+        teamRepository.deleteAll()
     }
 
     @Test
