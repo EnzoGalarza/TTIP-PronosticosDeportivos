@@ -7,6 +7,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.toDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.MatchNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
+import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TeamRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
@@ -24,6 +25,9 @@ class MatchService {
     @Autowired
     lateinit var repository : MatchRepository
 
+    @Autowired
+    lateinit var teamService: TeamService
+
     fun getMatches(competition: String, matchDay: Int): List<MatchDTO> {
         var matchesList: List<Match> = repository.findByCompetitionAndMatchDay(matchDay,competition);
         val notFinished: List<Match> = matchesList.filter { it.status != "FINISHED" }
@@ -32,7 +36,12 @@ class MatchService {
                 object : ParameterizedTypeReference<MatchListDTO>() {}
             )
             if  (matchesList.size < response.body!!.matches.size){
-                matchesList = response.body!!.matches.map { it.toModel(competition) }
+                matchesList = response.body!!.matches.map {
+                    val localTeam = teamService.saveTeam(it.homeTeam.toModel())
+                    val awayTeam = teamService.saveTeam(it.awayTeam.toModel())
+
+                    it.toModel(competition,localTeam,awayTeam)
+                }
             }
             else{
                 for (match : Match in matchesList){

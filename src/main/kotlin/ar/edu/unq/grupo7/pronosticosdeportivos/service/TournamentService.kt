@@ -5,6 +5,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.UserScore
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TournamentRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -74,6 +75,10 @@ class TournamentService {
             tournament.addUser(user)
         }
         tournamentRepository.save(tournament)
+    }
+
+    fun getTournamentsUserScores(tournamentId : Long): List<UserScore> {
+       return listOf()
     }
 
 }

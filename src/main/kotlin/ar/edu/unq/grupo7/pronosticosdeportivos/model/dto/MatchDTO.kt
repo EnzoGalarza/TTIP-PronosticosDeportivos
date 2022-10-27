@@ -1,6 +1,7 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.dto
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Team
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -14,5 +15,5 @@ data class MatchDTO(var id : Long, var status: String, var utcDate : LocalDateTi
     }
 }
 
-fun MatchDTO.toModel(competition : String) = Match(homeTeam = homeTeam.toModel(), awayTeam = awayTeam.toModel(),date = utcDate,
+fun MatchDTO.toModel(competition : String, localTeam : Team, awayTeam: Team) = Match(homeTeam = localTeam, awayTeam = awayTeam,date = utcDate,
     localGoals = score.fullTime.home, awayGoals = score.fullTime.away, code = id,status = status, matchDay = matchday, competition = competition)

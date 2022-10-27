@@ -26,4 +26,29 @@ class MatchBuilder(
         this.date = date
         return this
     }
+
+    fun withDay(day : Int) : MatchBuilder{
+        this.matchDay = day
+        return this
+    }
+
+    fun withStatus(status: String) : MatchBuilder{
+        this.status = status
+        return this
+    }
+
+    fun withCompetition(competition : String) : MatchBuilder{
+        this.competition = competition
+        return this
+    }
+
+    fun withLocal(team : Team) : MatchBuilder{
+        this.homeTeam = team
+        return this
+    }
+
+    fun withAway(team : Team) :MatchBuilder{
+        this.awayTeam = team
+        return this
+    }
 }
