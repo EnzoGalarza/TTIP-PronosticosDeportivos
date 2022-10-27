@@ -2,13 +2,16 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.ExpirationDayException
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
 @Table(name = "pronostic")
 data class Pronostic(@Column val user: String,
-                     @OneToOne(cascade = [CascadeType.ALL])
+                     @OneToOne
+                     @Cascade(CascadeType.SAVE_UPDATE, CascadeType.DETACH, CascadeType.MERGE)
                      @JoinColumn(name = "matchId",referencedColumnName = "id") var match: Match,
                      @Column var localGoals: Int, @Column var awayGoals: Int){
 

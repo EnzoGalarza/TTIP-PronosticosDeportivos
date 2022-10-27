@@ -3,15 +3,19 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.ResultDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.ScoreDTO
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
 @Table(name = "match")
-class Match(@OneToOne(cascade = [CascadeType.ALL])
+class Match(@OneToOne
+            @Cascade(CascadeType.SAVE_UPDATE, CascadeType.DETACH, CascadeType.MERGE)
             var homeTeam : Team,
-            @OneToOne(cascade = [CascadeType.ALL])
+            @OneToOne
+            @Cascade(CascadeType.SAVE_UPDATE, CascadeType.DETACH, CascadeType.MERGE)
             var awayTeam : Team, @Column var date : LocalDateTime?, @Column var localGoals : Int?,
             @Column var awayGoals : Int?, @Column val code : Long, @Column var status : String,
             @Column var matchDay : Int, @Column var competition : String) : Serializable{

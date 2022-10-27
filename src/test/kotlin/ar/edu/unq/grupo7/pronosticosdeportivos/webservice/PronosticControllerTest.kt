@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import java.time.LocalDateTime
 
 
@@ -34,21 +33,12 @@ import java.time.LocalDateTime
 class PronosticControllerTest {
 
     @Autowired
-    lateinit var pronosticController: PronosticController
-
-    @Autowired
-    lateinit var pronosticService: PronosticService
-
-    @Autowired
     lateinit var mockMvc: MockMvc
 
     lateinit var mapper: ObjectMapper
 
     @Autowired
     lateinit var pronosticRepository: PronosticRepository
-
-    @Autowired
-    lateinit var competitionRepository: CompetitionRepository
 
     @Autowired
     lateinit var teamRepository: TeamRepository
@@ -67,11 +57,11 @@ class PronosticControllerTest {
         mapper = ObjectMapper()
         mapper.registerModule(JavaTimeModule())
 
-        val team1 = teamBuilder.withName("team 1 p").build()
-        val team2 = teamBuilder.withName("team 2 p").build()
+        val team1 = teamRepository.save(teamBuilder.withName("team 1 p").build())
+        val team2 = teamRepository.save(teamBuilder.withName("team 2 p").build())
 
-        val match = matchBuilder.withLocal(team1).withAway(team1).withCompetition("PD").withCode(1).build()
-        val match2 = matchBuilder.withLocal(team1).withAway(team2).withCode(15).build()
+        val match = matchRepository.save(matchBuilder.withLocal(team1).withAway(team2).withCompetition("PD").withCode(1).build())
+        val match2 = matchRepository.save(matchBuilder.withLocal(team1).withAway(team2).withCode(15).build())
 
         val pronostic = Pronostic("jose",match,2,1)
         val pronostic2 = Pronostic("pedro",match2,0,2)
@@ -100,7 +90,7 @@ class PronosticControllerTest {
         val pronosticsToSave = mutableListOf(pronostic1,pronostic2)
 
 
-        mockMvc!!.perform(post("/pronostics")
+        mockMvc.perform(post("/pronostics")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(mapper.writeValueAsBytes(pronosticsToSave)))
             .andExpect(status().isCreated)
@@ -111,7 +101,7 @@ class PronosticControllerTest {
 
     @Test
     fun getAllPronosticsFromUser(){
-        mockMvc!!.perform(get("/pronostics/{user}/{competition}","jose","PD"))
+        mockMvc.perform(get("/pronostics/{user}/{competition}","jose","PD"))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.length()").value(1))
@@ -122,7 +112,7 @@ class PronosticControllerTest {
     fun triyingToSaveAPronosticFromNotSavedMatch(){
         val pronostic = pronosticBuilder.build()
 
-        mockMvc!!.perform(post("/pronostics")
+        mockMvc.perform(post("/pronostics")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(mapper.writeValueAsBytes(listOf(pronostic))))
             .andExpect(status().isNotFound)
@@ -142,7 +132,7 @@ class PronosticControllerTest {
             matchRepository.save(match)
         }
 
-        mockMvc!!.perform(post("/pronostics")
+        mockMvc.perform(post("/pronostics")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(mapper.writeValueAsBytes(listOf(pronostic))))
             .andExpect(status().isBadRequest)

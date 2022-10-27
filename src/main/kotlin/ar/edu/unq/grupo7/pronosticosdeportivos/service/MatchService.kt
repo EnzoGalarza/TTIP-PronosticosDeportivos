@@ -26,7 +26,7 @@ class MatchService {
     lateinit var repository : MatchRepository
 
     @Autowired
-    lateinit var teamRepository: TeamRepository
+    lateinit var teamService: TeamService
 
     fun getMatches(competition: String, matchDay: Int): List<MatchDTO> {
         var matchesList: List<Match> = repository.findByCompetitionAndMatchDay(matchDay,competition);
@@ -36,7 +36,12 @@ class MatchService {
                 object : ParameterizedTypeReference<MatchListDTO>() {}
             )
             if  (matchesList.size < response.body!!.matches.size){
-                matchesList = response.body!!.matches.map { it.toModel(competition) }
+                matchesList = response.body!!.matches.map {
+                    val localTeam = teamService.saveTeam(it.homeTeam.toModel())
+                    val awayTeam = teamService.saveTeam(it.awayTeam.toModel())
+
+                    it.toModel(competition,localTeam,awayTeam)
+                }
             }
             else{
                 for (match : Match in matchesList){
