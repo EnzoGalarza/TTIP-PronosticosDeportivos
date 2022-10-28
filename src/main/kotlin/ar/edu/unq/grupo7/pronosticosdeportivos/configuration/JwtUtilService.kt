@@ -24,7 +24,7 @@ class JwtUtilService {
     }
 
     private fun extractAllClaims(token: String?): Claims {
-        return Jwts.parser().setSigningKey(JWT_SECRET_KEY).parseClaimsJwt(token).getBody()
+        return Jwts.parser().setSigningKey(JWT_SECRET_KEY).parseClaimsJwt(token).body
     }
 
     private fun isTokenExpired(token: String?): Boolean {

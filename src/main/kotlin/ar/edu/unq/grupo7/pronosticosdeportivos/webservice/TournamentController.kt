@@ -30,7 +30,7 @@ class TournamentController {
 
     @GetMapping("/tournamentUsers/{tournamentId}")
     fun getTournamentUsers(@PathVariable("tournamentId")tournamentId : Long) : ResponseEntity<List<UserScoreDTO>>{
-        val usersScore = tournamentService.getTournamentsUserScores(tournamentId)
+        tournamentService.getTournamentsUserScores(tournamentId)
         return ResponseEntity(listOf(),HttpStatus.OK)
     }
 

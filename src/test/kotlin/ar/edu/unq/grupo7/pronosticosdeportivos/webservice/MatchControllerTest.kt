@@ -71,7 +71,7 @@ class MatchControllerTest {
             MatchListDTO(mutableListOf(match1,match2)), HttpStatus.OK
         ))
 
-        mockMvc!!.perform(get("/matches/{competition}/{matchDay}","PL",1))
+        mockMvc.perform(get("/matches/{competition}/{matchDay}","PL",1))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.length()").value(2))
             .andExpect(jsonPath("$[0].id").value(1))
@@ -87,7 +87,7 @@ class MatchControllerTest {
         matchRepository.save(matchBuilder.withStatus("FINISHED").withLocal(team1).withAway(team2).withCompetition("PD").withCode(1).withDay(1).build())
         matchRepository.save(matchBuilder.withCompetition("PL").withLocal(team1).withAway(team2).withCode(2).build())
 
-        mockMvc!!.perform(get("/matches/{competition}/{matchDay}","PD",1))
+        mockMvc.perform(get("/matches/{competition}/{matchDay}","PD",1))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].id").value(1))

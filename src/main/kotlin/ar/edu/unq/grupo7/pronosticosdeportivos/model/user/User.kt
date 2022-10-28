@@ -37,7 +37,7 @@ class User: UserDetails {
     }
 
     override fun getPassword(): String {
-        return password!!
+        return password
     }
 
     override fun getUsername(): String{
@@ -57,7 +57,7 @@ class User: UserDetails {
     }
 
     override fun isEnabled(): Boolean {
-        return enabled!!
+        return enabled
     }
 
     fun getName(): String{
