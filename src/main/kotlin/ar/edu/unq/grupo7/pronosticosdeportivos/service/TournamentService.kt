@@ -43,6 +43,7 @@ class TournamentService {
         }
     }
 
+    @Transactional
     fun getTournamentsFromUser(user : String) : List<Tournament>{
         val getUser = userRepository.findByEmail(user).get()
         return tournamentRepository.findByUserId(getUser.id)
@@ -81,6 +82,7 @@ class TournamentService {
         tournamentRepository.save(tournament)
     }
 
+    @Transactional
     fun getTournamentsUserScores(tournamentId : Long): List<UserScore> {
        return userScoreRepository.findTournamentScores(tournamentId)
     }
