@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import javax.persistence.*
 
+
 @Entity
 class User: UserDetails {
 
@@ -14,7 +15,7 @@ class User: UserDetails {
     var id: Long = 0
 
     @Column
-    private var name = ""
+    private var name: String = ""
 
     @Column(unique = true)
     private var email: String = ""
@@ -22,7 +23,7 @@ class User: UserDetails {
     @Column
     private var password: String = ""
 
-    @Column
+    @Lob
     private var profileImage: String = ""
 
     @Column

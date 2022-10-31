@@ -8,6 +8,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.UserScore
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TournamentRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserRepository
+import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserScoreRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,6 +21,9 @@ class TournamentService {
 
     @Autowired
     private lateinit var userRepository : UserRepository
+
+    @Autowired
+    private lateinit var userScoreRepository : UserScoreRepository
 
     @Autowired
     private lateinit var pronosticService: PronosticService
@@ -78,7 +82,7 @@ class TournamentService {
     }
 
     fun getTournamentsUserScores(tournamentId : Long): List<UserScore> {
-       return listOf()
+       return userScoreRepository.findTournamentScores(tournamentId)
     }
 
 }
