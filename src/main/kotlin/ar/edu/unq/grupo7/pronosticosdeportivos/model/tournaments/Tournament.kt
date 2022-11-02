@@ -16,7 +16,7 @@ class Tournament(@Column val name : String,
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0
 
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinTable(name="Tournament_User",
         joinColumns=[JoinColumn(name="tournamentId")],
         inverseJoinColumns=[JoinColumn(name="userScoreId")])

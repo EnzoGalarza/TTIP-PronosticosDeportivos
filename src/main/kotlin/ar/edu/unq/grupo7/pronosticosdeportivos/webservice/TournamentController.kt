@@ -22,9 +22,9 @@ class TournamentController {
         return ResponseEntity(tournament,HttpStatus.CREATED)
     }
 
-    @GetMapping("/tournaments/{user}")
-    fun getTournaments(@PathVariable("user") user : String) : ResponseEntity<List<Tournament>>{
-        val tournaments = tournamentService.getTournamentsFromUser(user)
+    @GetMapping("/tournaments/{userId}")
+    fun getTournaments(@PathVariable("userId") userId : Long) : ResponseEntity<List<Tournament>>{
+        val tournaments = tournamentService.getTournamentsFromUser(userId)
         return ResponseEntity(tournaments,HttpStatus.OK)
     }
 
