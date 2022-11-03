@@ -1,7 +1,7 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.UserScore
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.TournamentService
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,7 +23,7 @@ class TournamentController {
     }
 
     @GetMapping("/tournaments/{userId}")
-    fun getTournaments(@PathVariable("userId") userId : Long) : ResponseEntity<List<Tournament>>{
+    fun getTournaments(@PathVariable("userId") userId : Long) : ResponseEntity<List<UserTournamentDTO>>{
         val tournaments = tournamentService.getTournamentsFromUser(userId)
         return ResponseEntity(tournaments,HttpStatus.OK)
     }

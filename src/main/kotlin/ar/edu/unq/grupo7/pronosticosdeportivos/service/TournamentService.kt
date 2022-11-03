@@ -1,6 +1,7 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
@@ -44,7 +45,7 @@ class TournamentService {
     }
 
     @Transactional
-    fun getTournamentsFromUser(userId : Long) : List<Tournament>{
+    fun getTournamentsFromUser(userId : Long) : List<UserTournamentDTO>{
         return tournamentRepository.findByUserId(userId)
     }
 

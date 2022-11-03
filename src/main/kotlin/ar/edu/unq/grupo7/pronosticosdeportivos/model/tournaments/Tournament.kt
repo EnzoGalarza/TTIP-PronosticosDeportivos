@@ -1,10 +1,23 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNameLengthException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.*
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import javax.persistence.*
 
+@NamedNativeQuery(name = "Tournament.findByUserId",
+                  query = "SELECT tournament.id AS id, tournament.name AS name, tournament.competition as competition\n" +
+                          "FROM tournament\n" +
+                          "INNER JOIN tournament_user on tournament.id = tournament_user.tournament_id\n" +
+                          "INNER JOIN user_score on tournament_user.user_score_id = user_score.id\n" +
+                          "WHERE user_score.user_score_id = ?1",
+                  resultSetMapping = "Mapping.UserTournamentDTO")
+@SqlResultSetMapping(name = "Mapping.UserTournamentDTO",
+                    classes = (arrayOf(ConstructorResult(targetClass = UserTournamentDTO::class,
+                    columns = (arrayOf(ColumnResult(name = "id", type = Long::class),
+                                       ColumnResult(name = "name", type = String::class),
+                                       ColumnResult(name = "competition", type = String::class)))))))
 @Entity
 class Tournament(@Column val name : String,
                  @Column val competition : String,
@@ -16,7 +29,7 @@ class Tournament(@Column val name : String,
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [CascadeType.ALL])
     @JoinTable(name="Tournament_User",
         joinColumns=[JoinColumn(name="tournamentId")],
         inverseJoinColumns=[JoinColumn(name="userScoreId")])
