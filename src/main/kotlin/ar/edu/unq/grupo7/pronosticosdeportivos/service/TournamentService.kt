@@ -52,18 +52,25 @@ class TournamentService {
     @Transactional
     fun updateTournament(tournamentId : Long){
         val tournament = tournamentRepository.findById(tournamentId).get()
+        var hit : Boolean
         for(user in tournament.users){
             val pronosticsFromUser = pronosticService.notEvaluatedPronostics(user.user.username,tournament.competition,tournamentId)
             for(pronostic in pronosticsFromUser){
+                hit = false
                 tournament.addEvaluatedPronostic(pronostic.id)
                 for(criteria in tournament.criterias){
                     val tournamentCriteria = tournament.getCriteria(criteria.name)
-                    if(tournamentCriteria.eval(pronostic, pronostic.match)){
+                    if(tournamentCriteria.eval(pronostic, pronostic.match)) {
                         user.sumPoints(criteria.score)
+                        hit = true;
                     }
                 }
+                if(hit){
+                    user.addHit()
+                }
+                user.addPronostic()
             }
-
+            user.calculatePercentage()
         }
         tournamentRepository.save(tournament)
     }
