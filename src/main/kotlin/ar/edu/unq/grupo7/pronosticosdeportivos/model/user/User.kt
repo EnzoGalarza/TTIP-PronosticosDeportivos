@@ -23,7 +23,7 @@ class User: UserDetails {
     @Column
     private var password: String = ""
 
-    @Lob
+    @Column(length=1048576)
     private var profileImage: String = ""
 
     @Column
