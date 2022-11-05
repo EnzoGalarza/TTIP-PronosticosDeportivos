@@ -3,10 +3,15 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.service
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Email
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.MessageBuilder
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Sender
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.UserScore
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.Notification
+import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.CompetitionRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TournamentRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserScoreRepository
@@ -28,6 +33,11 @@ class TournamentService {
 
     @Autowired
     private lateinit var pronosticService: PronosticService
+
+    @Autowired
+    private lateinit var competitionRepository: CompetitionRepository
+
+    private val messageBuilder: MessageBuilder = MessageBuilder()
 
     @Transactional
     fun saveTournament(tournament: TournamentDTO) : Tournament{
@@ -52,25 +62,20 @@ class TournamentService {
     @Transactional
     fun updateTournament(tournamentId : Long){
         val tournament = tournamentRepository.findById(tournamentId).get()
-        var hit : Boolean
         for(user in tournament.users){
             val pronosticsFromUser = pronosticService.notEvaluatedPronostics(user.user.username,tournament.competition,tournamentId)
             for(pronostic in pronosticsFromUser){
-                hit = false
                 tournament.addEvaluatedPronostic(pronostic.id)
                 for(criteria in tournament.criterias){
                     val tournamentCriteria = tournament.getCriteria(criteria.name)
                     if(tournamentCriteria.eval(pronostic, pronostic.match)) {
                         user.sumPoints(criteria.score)
-                        hit = true;
+                        user.addHit()
                     }
-                }
-                if(hit){
-                    user.addHit()
                 }
                 user.addPronostic()
             }
-            user.calculatePercentage()
+            user.calculatePercentage(tournament.criterias.size)
         }
         tournamentRepository.save(tournament)
     }
@@ -80,18 +85,47 @@ class TournamentService {
         val tournament = tournamentRepository.findById(tournamentId).orElseThrow {
             throw TournamentNotFoundException("No se encontró el torneo")
         }
+
+        tournament.validate(users)
+
         for(userEmail in users){
             val user = userRepository.findByEmail(userEmail).orElseThrow {
                 throw UserNotFoundException("Usuario ${userEmail} no se encuentra registrado")
             }
-            tournament.addUser(user)
+            user.addNotification(Notification(true,"Invitación al torneo ${tournament.name}", tournamentId))
+            userRepository.save(user)
         }
-        tournamentRepository.save(tournament)
+
+        val competition = competitionRepository.findByCode(tournament.competition)
+
+        val sender = Sender("Client send", this.buildInviteEmail(users,tournament.name, competition.name))
+        sender.start()
+    }
+
+    private fun buildInviteEmail(usersEmail : List<String>, name : String, competition : String): Email {
+        val email = Email()
+
+        email.composeEmailWith("Te invitaron al torneo $name", usersEmail, messageBuilder.inviteUsers(name, competition))
+        return email
     }
 
     @Transactional
     fun getTournamentsUserScores(tournamentId : Long): List<UserScore> {
        return userScoreRepository.findTournamentScores(tournamentId)
+    }
+
+    @Transactional
+    fun addUserToTournament(tournamentId: Long, userEmail: String) {
+        val tournament = tournamentRepository.findById(tournamentId).orElseThrow {
+            throw TournamentNotFoundException("No se encontró el torneo")
+        }
+
+        val user = userRepository.findByEmail(userEmail).orElseThrow {
+            throw UserNotFoundException("Usuario ${userEmail} no se encuentra registrado")
+        }
+
+        tournament.addUser(user)
+        tournamentRepository.save(tournament)
     }
 
 }

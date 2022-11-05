@@ -1,6 +1,7 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.DuplicateUserInTournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNameLengthException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.*
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
@@ -40,6 +41,7 @@ class Tournament(@Column val name : String,
     var evaluatedPronostic : MutableList<EvaluatedPronostic> = mutableListOf()
 
     fun addUser(user: User){
+        validate(listOf(user.username))
         this.users.add(UserScore(user,0))
     }
 
@@ -58,12 +60,20 @@ class Tournament(@Column val name : String,
         this.evaluatedPronostic.add(EvaluatedPronostic(id))
     }
 
-    fun validate(){
+    fun validate(userEmails : List<String> = listOf()){
         require(name.length > 3){
             throw TournamentNameLengthException("El tamaño mínimo del nombre son 3 caracteres")
         }
         require(name.length <= 20){
             throw TournamentNameLengthException("El tamaño máximo del nombre son 20 caracteres")
+        }
+
+        if(userEmails.isNotEmpty()) {
+            users.forEach {
+                require(!userEmails.contains(it.user.username)) {
+                    throw DuplicateUserInTournament("El usuario ${it.user.username} ya está en el torneo")
+                }
+            }
         }
     }
 

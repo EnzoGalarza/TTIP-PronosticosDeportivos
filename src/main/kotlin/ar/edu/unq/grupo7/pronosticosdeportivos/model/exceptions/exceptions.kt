@@ -27,3 +27,5 @@ class InvalidNameException(override val message: String?) : Exception()
 class MatchNotFoundException(override val message: String?) : Exception()
 
 class TournamentNotFoundException(override val message: String?) : Exception()
+
+class DuplicateUserInTournament(override val message: String?) : Exception()

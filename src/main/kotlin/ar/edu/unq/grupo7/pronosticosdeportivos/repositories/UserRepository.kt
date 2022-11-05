@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-interface UserRepository: JpaRepository<User, Int> {
+interface UserRepository: JpaRepository<User, Long> {
 
     fun findByEmail(email: String?): Optional<User>
 

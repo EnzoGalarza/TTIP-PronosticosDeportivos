@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository
 @Configuration
 @Repository
 interface CompetitionRepository : JpaRepository<Competition, Long> {
+    fun findByCode(competition: String): Competition
 
 }

@@ -21,15 +21,15 @@ class UserScore(@OneToOne
     }
 
     fun addHit() {
-        this.score += 1
+        this.hits += 1
     }
 
     fun addPronostic(){
         totalPronostics += 1
     }
 
-    fun calculatePercentage(){
-        percentage = hits * 100 / totalPronostics
+    fun calculatePercentage(cantidadDeCriterios : Int){
+        percentage = (hits * 100 / totalPronostics) / cantidadDeCriterios
     }
 
 }

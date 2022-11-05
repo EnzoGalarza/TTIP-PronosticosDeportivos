@@ -29,6 +29,10 @@ class User: UserDetails {
     @Column
     private var enabled: Boolean = true
 
+    @OneToMany(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "userId")
+    private var notifacations : MutableList<Notification> = mutableListOf()
+
     @Enumerated(EnumType.STRING)
     private val role: UserRole = UserRole.USER
 
@@ -89,6 +93,14 @@ class User: UserDetails {
         require(name.length > 3){
             throw InvalidNameException("El nombre del usuario debe tener por lo menos 3 caracteres")
         }
+    }
+
+    fun addNotification(notification: Notification) {
+        this.notifacations.add(notification)
+    }
+
+    fun deleteNotification(notification: Notification) {
+        this.notifacations.remove(notification)
     }
 
 }

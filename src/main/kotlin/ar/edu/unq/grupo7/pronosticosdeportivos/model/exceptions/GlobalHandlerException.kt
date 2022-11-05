@@ -12,7 +12,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ExpirationDayException::class,UsedEmailException::class,
         InvalidEmailException::class, TokenNotFoundException::class,
         InvalidPasswordException::class, InvalidNameException::class,
-        EmailAlreadyConfirmedException::class, TournamentNameLengthException::class)
+        EmailAlreadyConfirmedException::class, TournamentNameLengthException::class,
+        DuplicateUserInTournament::class)
     fun handleBadRequest(exception : Exception) : ResponseEntity<Any>{
         return ResponseEntity(exception.message,HttpStatus.BAD_REQUEST)
     }

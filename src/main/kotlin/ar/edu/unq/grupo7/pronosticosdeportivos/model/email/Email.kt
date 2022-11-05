@@ -5,14 +5,14 @@ class Email {
     val user = "pdeportivos.ok@gmail.com"
     val pass = "pekatblrilyjsfhs"
     var subject = ""
-    var receiver = ""
+    var recipients = listOf<String>()
     var message = ""
     var filePath = ""
     var fileName = ""
 
-    fun composeEmailWith(subject: String, receiver: String, message: String) {
+    fun composeEmailWith(subject: String, recipients: List<String>, message: String) {
         this.subject = subject
-        this.receiver = receiver
+        this.recipients = recipients
         this.message = message
     }
 }

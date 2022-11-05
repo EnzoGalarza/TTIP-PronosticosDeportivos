@@ -2,6 +2,7 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Email
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.UserScore
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.TournamentService
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,9 +40,16 @@ class TournamentController {
         tournamentService.updateTournament(tournamentId)
     }
 
-    @PutMapping("/tournaments/{tournamentId}")
+    @PostMapping("/tournaments/{tournamentId}")
     fun inviteUsersToTournament(@PathVariable("tournamentId") tournamentId: Long, @RequestBody users : List<String>) : ResponseEntity<Any>{
         tournamentService.inviteUsers(tournamentId,users)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @PostMapping("/acceptInvitation")
+    fun acceptInvitation(@RequestParam("tournamentId") tournamentId: Long, @RequestParam("userEmail") userEmail: String) : ResponseEntity<Any>{
+        tournamentService.addUserToTournament(tournamentId,userEmail)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
 }

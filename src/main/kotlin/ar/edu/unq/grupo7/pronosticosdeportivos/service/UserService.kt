@@ -4,7 +4,9 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Email
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.MessageBuilder
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Sender
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UsedEmailException
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.token.ConfirmationToken
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.Notification
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -56,15 +58,22 @@ class UserService: UserDetailsService {
         sender.start()
     }
 
-    private fun buildConfirmEmail(reciver: String, name: String, token: String): Email {
+    private fun buildConfirmEmail(receiver: String, name: String, token: String): Email {
         val email = Email()
         val link = "http://localhost:8080/confirmToken?token=$token"
-        email.composeEmailWith("Confirmá tu email", reciver, messageBuilder.confirmEmailMessage(name, link))
+        email.composeEmailWith("Confirmá tu email", mutableListOf(receiver), messageBuilder.confirmEmailMessage(name, link))
         return email
     }
 
     fun getUsersEmails(user: String): List<String> {
         return userRepository.findUsersEmail(user)
+    }
+
+    @Transactional
+    fun deleteNotification(userId: Long, notification: Notification) {
+        var user = userRepository.findById(userId).orElseThrow { UserNotFoundException("No se encontró al usuario") }
+        user.deleteNotification(notification)
+        userRepository.save(user)
     }
 
 }

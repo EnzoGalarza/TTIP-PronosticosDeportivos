@@ -34,7 +34,9 @@ class Controller {
             }
             val message = MimeMessage(s)
             message.setFrom(InternetAddress(mail.user))
-            message.addRecipient(Message.RecipientType.TO, InternetAddress(mail.receiver))
+            mail.recipients.forEach {
+                message.addRecipient(Message.RecipientType.TO, InternetAddress(it))
+            }
             message.setSubject(mail.subject)
             message.setText(mail.message, "utf-8", "html")
             val t: Transport = s.getTransport("smtp")
