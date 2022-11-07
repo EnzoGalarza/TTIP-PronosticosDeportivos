@@ -8,7 +8,7 @@ import javax.persistence.*
 class Team(val name: String?, val tla : String?, val crest : String?) {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long = 0
 
 

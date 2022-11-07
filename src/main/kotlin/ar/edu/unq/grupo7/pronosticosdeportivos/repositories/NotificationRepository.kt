@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository
 interface NotificationRepository : JpaRepository<Notification, Long> {
 
      @Query("SELECT * FROM notification\n" +
-            "WHERE user_id = ?1", nativeQuery = true)
+            "WHERE user_id = :userId", nativeQuery = true)
      fun getByUserId(userId: Long): List<Notification>
 }

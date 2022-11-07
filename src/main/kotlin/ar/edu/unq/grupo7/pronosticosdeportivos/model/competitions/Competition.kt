@@ -7,6 +7,6 @@ import javax.persistence.*
 data class Competition(var name : String, var emblem : String, var code : String){
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long = 0
 }

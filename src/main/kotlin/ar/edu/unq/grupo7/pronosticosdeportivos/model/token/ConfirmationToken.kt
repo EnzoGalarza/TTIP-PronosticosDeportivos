@@ -36,7 +36,7 @@ class ConfirmationToken(@Column(nullable = false) var token: String,
 @Entity
 class ConfirmationToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private val id: Long? = null
 
     @Column(nullable = false)

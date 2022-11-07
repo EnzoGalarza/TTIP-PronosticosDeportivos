@@ -21,7 +21,7 @@ class Match(@OneToOne
             @Column var matchDay : Int, @Column var competition : String) : Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long = 0
 
 }

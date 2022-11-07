@@ -15,11 +15,11 @@ interface UserRepository: JpaRepository<User, Long> {
     @Modifying
     @Query(
         "UPDATE User a " +
-                "SET a.enabled = TRUE WHERE a.email = ?1"
+                "SET a.enabled = TRUE WHERE a.email = :email"
     )
     fun enableAppUser(email: String?): Int
 
-    @Query("SELECT email FROM public.user WHERE email <> ?1", nativeQuery = true)
+    @Query("SELECT email FROM public.user WHERE email <> :user", nativeQuery = true)
     fun findUsersEmail(user: String): List<String>
 
 }

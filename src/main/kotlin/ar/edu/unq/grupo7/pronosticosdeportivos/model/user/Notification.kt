@@ -5,7 +5,7 @@ import javax.persistence.*
 @Entity
 class Notification(@Column var acceptable : Boolean, @Column var message : String, @Column var tournamentId : Long) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
 }

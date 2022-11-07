@@ -18,8 +18,8 @@ interface ConfirmationTokenRepository : JpaRepository<ConfirmationToken?, Long?>
     @Modifying
     @Query(
         "UPDATE ConfirmationToken c " +
-                "SET c.isConfirmed = ?2 " +
-                "WHERE c.token = ?1"
+                "SET c.isConfirmed = :isConfirmed " +
+                "WHERE c.token = :token"
     )
     fun updateConfirmed(
         token: String?,

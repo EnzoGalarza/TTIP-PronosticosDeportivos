@@ -5,6 +5,6 @@ import javax.persistence.*
 @Entity
 class EvaluatedPronostic(@Column val pronosticId : Long) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 }

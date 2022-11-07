@@ -13,7 +13,7 @@ class UserScore(@OneToOne
                 @Column var percentage : Int = 0) {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int = 0
 
     fun sumPoints(score: Int) {
@@ -29,7 +29,8 @@ class UserScore(@OneToOne
     }
 
     fun calculatePercentage(cantidadDeCriterios : Int){
-        percentage = (hits * 100 / totalPronostics) / cantidadDeCriterios
+        if(totalPronostics > 0)
+         percentage = (hits * 100 / totalPronostics) / cantidadDeCriterios
     }
 
 }

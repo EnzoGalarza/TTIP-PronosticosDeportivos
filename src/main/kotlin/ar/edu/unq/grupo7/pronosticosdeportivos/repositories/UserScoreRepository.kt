@@ -9,7 +9,7 @@ interface UserScoreRepository: JpaRepository<UserScore, Int> {
     @Query("SELECT * FROM user_score\n" +
            "INNER JOIN tournament_user on tournament_user.user_score_id = user_score.id\n" +
            "INNER JOIN public.user on public.user.id = user_score.user_score_id\n" +
-           "WHERE tournament_user.tournament_id = ?1\n" +
+           "WHERE tournament_user.tournament_id = :id\n" +
             "ORDER BY score DESC, hits DESC, percentage DESC", nativeQuery = true)
     fun findTournamentScores(id: Long): List<UserScore>
 

@@ -16,7 +16,7 @@ data class Pronostic(@Column val user: String,
                      @Column var localGoals: Int, @Column var awayGoals: Int){
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long = 0
 
     fun checkPoints(localGoals:Int, awayGoals:Int) : Int{

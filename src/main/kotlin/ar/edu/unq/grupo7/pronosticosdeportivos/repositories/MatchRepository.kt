@@ -11,9 +11,9 @@ import java.util.*
 @Repository
 interface MatchRepository : JpaRepository<Match, Long> {
 
-    @Query("SELECT * FROM match WHERE (competition = ?2 AND match_day = ?1)", nativeQuery = true)
+    @Query("SELECT * FROM match WHERE (competition = :competition AND match_day = :matchDay)", nativeQuery = true)
     fun findByCompetitionAndMatchDay(matchDay : Int, competition: String) : List<Match>
 
-    @Query("SELECT * FROM match WHERE (code = ?1)",nativeQuery = true)
+    @Query("SELECT * FROM match WHERE (code = :code)",nativeQuery = true)
     fun findByCode(code : Long) : Optional<Match>
 }

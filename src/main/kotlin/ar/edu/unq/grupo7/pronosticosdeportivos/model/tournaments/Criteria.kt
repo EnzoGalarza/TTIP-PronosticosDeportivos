@@ -5,6 +5,6 @@ import javax.persistence.*
 @Entity
 class Criteria(@Column val name : String, @Column var score : Int) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int = 0
 }

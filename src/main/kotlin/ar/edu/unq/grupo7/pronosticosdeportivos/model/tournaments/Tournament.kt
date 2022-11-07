@@ -2,6 +2,7 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.DuplicateUserInTournament
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.NoCriteriaTournamentError
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNameLengthException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.*
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
@@ -27,7 +28,7 @@ class Tournament(@Column val name : String,
                  val criterias : List<Criteria>) {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
     @ManyToMany(cascade = [CascadeType.ALL])
@@ -66,6 +67,10 @@ class Tournament(@Column val name : String,
         }
         require(name.length <= 20){
             throw TournamentNameLengthException("El tamaño máximo del nombre son 20 caracteres")
+        }
+
+        require(criterias.isNotEmpty()){
+            throw NoCriteriaTournamentError("Se debe tener al menos un criterio de puntuación")
         }
 
         if(userEmails.isNotEmpty()) {
