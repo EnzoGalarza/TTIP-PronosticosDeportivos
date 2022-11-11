@@ -47,8 +47,9 @@ class TournamentController {
     }
 
     @PostMapping("/acceptInvitation")
-    fun acceptInvitation(@RequestParam("tournamentId") tournamentId: Long, @RequestParam("userEmail") userEmail: String) : ResponseEntity<Any>{
-        tournamentService.addUserToTournament(tournamentId,userEmail)
+    fun acceptInvitation(@RequestParam("tournamentId") tournamentId: Long, @RequestParam("userEmail") userEmail: String,
+                         @RequestParam("invitationId") invitationId : Long) : ResponseEntity<Any>{
+        tournamentService.addUserToTournament(tournamentId,userEmail,invitationId)
         return ResponseEntity(HttpStatus.OK)
     }
 

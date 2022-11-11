@@ -6,15 +6,13 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Email
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.MessageBuilder
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Sender
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.NotificationNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.UserScore
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.Notification
-import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.CompetitionRepository
-import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TournamentRepository
-import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserRepository
-import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.UserScoreRepository
+import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -29,6 +27,9 @@ class TournamentService {
     private lateinit var userRepository : UserRepository
 
     @Autowired
+    private lateinit var userService : UserService
+
+    @Autowired
     private lateinit var userScoreRepository : UserScoreRepository
 
     @Autowired
@@ -36,6 +37,9 @@ class TournamentService {
 
     @Autowired
     private lateinit var competitionRepository: CompetitionRepository
+
+    @Autowired
+    private lateinit var notificationRepository: NotificationRepository
 
     private val messageBuilder: MessageBuilder = MessageBuilder()
 
@@ -115,7 +119,7 @@ class TournamentService {
     }
 
     @Transactional
-    fun addUserToTournament(tournamentId: Long, userEmail: String) {
+    fun addUserToTournament(tournamentId: Long, userEmail: String, invitationId : Long) {
         val tournament = tournamentRepository.findById(tournamentId).orElseThrow {
             throw TournamentNotFoundException("No se encontró el torneo")
         }
@@ -124,7 +128,13 @@ class TournamentService {
             throw UserNotFoundException("Usuario ${userEmail} no se encuentra registrado")
         }
 
+        val notification = notificationRepository.findById(invitationId).orElseThrow {
+            throw NotificationNotFoundException("No existe la notificacion que se intenta aceptar")
+        }
+
         tournament.addUser(user)
+        notificationRepository.delete(notification)
+        userService.deleteNotification(user.id, notification)
         tournamentRepository.save(tournament)
     }
 
