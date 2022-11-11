@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 class PronosticBuilder(
     private var user : String = "x@gmail.com",
     private var match: Match = MatchBuilder().build(),
-    private val localGoals : Int = 1,
-    private val awayGoals : Int = 0
+    private var localGoals : Int = 1,
+    private var awayGoals : Int = 0
 ) {
     fun build() = Pronostic(user,match,localGoals,awayGoals)
 
@@ -24,6 +24,16 @@ class PronosticBuilder(
 
     fun withMatch(match: Match): PronosticBuilder {
         this.match = match
+        return this
+    }
+
+    fun withAwayGoals(awayGoals: Int) : PronosticBuilder{
+        this.awayGoals = awayGoals
+        return this
+    }
+
+    fun withLocalGoals(localGoals: Int) : PronosticBuilder{
+        this.localGoals = localGoals
         return this
     }
 

@@ -13,4 +13,9 @@ class CompetitionBuilder(
         this.name = name
         return this
     }
+
+    fun withCode(code:String) : CompetitionBuilder{
+        this.code = code
+        return this
+    }
 }
