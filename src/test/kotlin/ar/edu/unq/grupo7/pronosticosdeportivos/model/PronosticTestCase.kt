@@ -1,5 +1,6 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.model
 
+import ar.edu.unq.grupo7.pronosticosdeportivos.builders.PronosticBuilder
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.ExpirationDayException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
@@ -18,6 +19,8 @@ class PronosticTestCase {
     @Mock
     private lateinit var match : Match
 
+    private val pronosticBuilder = PronosticBuilder()
+
     @Test
     fun pronosticHasAUserAMatchALocalTeamGoalsAndAwayTeamGoals(){
         val pronostic = Pronostic("nombre_usuario",match,1,0)
@@ -29,17 +32,18 @@ class PronosticTestCase {
     }
 
     @Test
-    fun pronosticsGive0PointsIfMatchResultIsNotEquals(){
-        val pronostic = Pronostic("nombre_usuario",match,1,0)
+    fun updateGoalsFromPronostic(){
+        val pronostic = pronosticBuilder.withLocalGoals(2).withAwayGoals(1).build()
 
-        assertEquals(0,pronostic.checkPoints(0,2))
-    }
+        val oldLocalGoals = pronostic.localGoals
+        val oldAwayGoals = pronostic.awayGoals
 
-    @Test
-    fun pronosticGive3PointIfMatchResultIsEquals(){
-        val pronostic = Pronostic("nombre_usuario",match,1,0)
+        pronostic.updateGoals(pronosticBuilder.withLocalGoals(3).withAwayGoals(4).build())
 
-        assertEquals(3,pronostic.checkPoints(1,0))
+        assertEquals(pronostic.localGoals,3)
+        assertEquals(pronostic.awayGoals,4)
+        assertEquals(oldLocalGoals,2)
+        assertEquals(oldAwayGoals,1)
     }
 
     @Test

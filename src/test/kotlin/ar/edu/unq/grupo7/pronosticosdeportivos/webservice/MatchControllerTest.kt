@@ -22,6 +22,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -29,7 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.web.client.RestTemplate
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false )
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 class MatchControllerTest {
 
@@ -60,6 +61,7 @@ class MatchControllerTest {
     }
 
     @Test
+    @WithMockUser("email")
     fun getMatchesOfCompetitionPLWhenEmptyDB(){
         val match1 = matchBuilder.withCode(1).build().toDTO()
         val match2 = matchBuilder.withCode(5).build().toDTO()
@@ -80,6 +82,7 @@ class MatchControllerTest {
     }
 
     @Test
+    @WithMockUser("email")
     fun getMatchesOfCompetitionPDWhenDBNotEmpty(){
         val team1 = teamRepository.save(teamBuilder.withName("team 1 p").build())
         val team2 = teamRepository.save(teamBuilder.withName("team 2 p").build())
@@ -92,5 +95,11 @@ class MatchControllerTest {
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].id").value(1))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    }
+
+    @Test
+    fun getMatchesWithoutToken(){
+        mockMvc.perform(get("/matches/{competition}/{matchDay}","PD",1))
+            .andExpect(status().isForbidden)
     }
 }

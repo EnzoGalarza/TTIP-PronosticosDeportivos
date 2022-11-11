@@ -19,12 +19,6 @@ data class Pronostic(@Column val user: String,
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Long = 0
 
-    fun checkPoints(localGoals:Int, awayGoals:Int) : Int{
-        if(localGoals == this.localGoals && awayGoals == this.awayGoals)
-            return 3
-        return 0
-    }
-
     fun updateGoals(pronostic: Pronostic){
         this.localGoals = pronostic.localGoals
         this.awayGoals = pronostic.awayGoals

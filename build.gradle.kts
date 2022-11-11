@@ -25,6 +25,7 @@ dependencies {
 	implementation("org.postgresql:postgresql:42.5.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.3")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.security:spring-security-test:5.7.5")
 	implementation("com.sun.mail:javax.mail:1.6.2")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -61,7 +62,7 @@ tasks.jacocoTestReport {
 	classDirectories.setFrom(
 		files(classDirectories.files.map {
 			fileTree(it) {
-				exclude("**/config/**", "**/entity/**", "**/*Application*.*", "**/ServletInitializer.*")
+				exclude("**/config/**", "**/configuration/**", "**/dto/**", "**/email/**", "**/entity/**", "**/*Application*.*", "**/ServletInitializer.*")
 			}
 		})
 	)

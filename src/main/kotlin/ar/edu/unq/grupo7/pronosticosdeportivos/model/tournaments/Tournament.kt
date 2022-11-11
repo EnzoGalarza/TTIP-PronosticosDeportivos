@@ -2,6 +2,7 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.DuplicateUserInTournament
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.IllegalCriteriaException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.NoCriteriaTournamentError
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNameLengthException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.*
@@ -31,7 +32,7 @@ class Tournament(@Column val name : String,
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
-    @ManyToMany(cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.EAGER,cascade = [CascadeType.ALL])
     @JoinTable(name="Tournament_User",
         joinColumns=[JoinColumn(name="tournamentId")],
         inverseJoinColumns=[JoinColumn(name="userScoreId")])
@@ -53,6 +54,9 @@ class Tournament(@Column val name : String,
             "Partial" -> pronosticCriteria = PartialResult
             "Approach" -> pronosticCriteria = Approach
             "WinnerOrTie" -> pronosticCriteria = WinnerOrTie
+            else -> {
+                throw IllegalCriteriaException("Criterio invalido")
+            }
         }
         return pronosticCriteria!!
     }

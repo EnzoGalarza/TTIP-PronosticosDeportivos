@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -28,7 +29,7 @@ import java.time.LocalDateTime
 
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false )
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 class PronosticControllerTest {
 
@@ -76,6 +77,7 @@ class PronosticControllerTest {
 
 
     @Test
+    @WithMockUser("email")
     fun registerPronostics(){
         var team1 = Team("team1","PD","Team crest")
         var team2 = Team("team2","PD","Team2 crest")
@@ -104,6 +106,7 @@ class PronosticControllerTest {
     }
 
     @Test
+    @WithMockUser("email")
     fun getAllPronosticsFromUser(){
         mockMvc.perform(get("/pronostics/{user}/{competition}","jose","PD"))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -113,6 +116,7 @@ class PronosticControllerTest {
     }
 
     @Test
+    @WithMockUser("email")
     fun triyingToSaveAPronosticFromNotSavedMatch(){
         val pronostic = pronosticBuilder.build()
 
@@ -124,6 +128,7 @@ class PronosticControllerTest {
     }
 
     /*@Test
+    @WithMockUser("email")
     fun registerPronosticWithMatchedAlreadyStartedShouldFail(){
         val pronostic = pronosticBuilder.withUsername("jose").build().apply {
             val team1 = teamBuilder.build()
@@ -140,5 +145,19 @@ class PronosticControllerTest {
             .content(mapper.writeValueAsBytes(listOf(pronostic))))
             .andExpect(status().isBadRequest)
     }*/
+
+    @Test
+    fun registerPronosticWithoutToken(){
+        mockMvc.perform(post("/pronostics")
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(mapper.writeValueAsBytes(pronosticBuilder.build())))
+            .andExpect(status().isForbidden)
+    }
+
+    @Test
+    fun getAllPronosticsFromUserWithoutToken(){
+        mockMvc.perform(get("/pronostics/{user}/{competition}","jose","PD"))
+            .andExpect(status().isForbidden)
+    }
 
 }
