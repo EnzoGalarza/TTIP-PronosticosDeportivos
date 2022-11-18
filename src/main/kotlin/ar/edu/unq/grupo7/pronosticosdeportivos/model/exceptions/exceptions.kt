@@ -35,3 +35,5 @@ class NoCriteriaTournamentError(override val message: String?) : Exception()
 class IllegalCriteriaException(override val message: String?) : Exception()
 
 class NotificationNotFoundException(override val message: String?) : Exception()
+
+class InvalidImageException(override val message: String?) : Exception()

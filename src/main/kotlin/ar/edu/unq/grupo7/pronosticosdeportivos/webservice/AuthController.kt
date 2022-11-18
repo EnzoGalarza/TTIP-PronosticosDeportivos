@@ -3,10 +3,7 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 import ar.edu.unq.grupo7.pronosticosdeportivos.configuration.JwtUtilService
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.LoginDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.RegisterDTO
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.InvalidEmailException
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.InvalidPasswordException
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserDisabledException
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.UserNotFoundException
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.*
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.token.WebToken
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.validations.EmailValidator
@@ -49,6 +46,9 @@ class AuthController {
         }
         require(register.password.length >= 3) {
             throw InvalidPasswordException("La contraseña debe tener al menos 3 caracteres")
+        }
+        require(register.image.length < 1048576){
+            throw InvalidImageException("El tamaño de la imagen es muy grande, debe ser menor a 1 megabyte")
         }
         val user = User()
         user.setName(register.name)
