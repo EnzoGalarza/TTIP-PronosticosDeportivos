@@ -6,11 +6,9 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.builders.TeamBuilder
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Team
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
-import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.CompetitionRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.PronosticRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TeamRepository
-import ar.edu.unq.grupo7.pronosticosdeportivos.service.PronosticService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.junit.jupiter.api.BeforeEach

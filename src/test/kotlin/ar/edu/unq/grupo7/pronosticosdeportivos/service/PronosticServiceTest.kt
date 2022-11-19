@@ -3,6 +3,7 @@ package ar.edu.unq.grupo7.pronosticosdeportivos.service
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Match
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.Pronostic
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.PronosticRepository
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -52,6 +53,26 @@ class PronosticServiceTest(@Mock val pronosticRepository: PronosticRepository, @
 
         Mockito.verify(pronostic, times(1)).updateMatch(match)
         Mockito.verify(pronostic,times(0)).updateGoals(pronostic)
+    }
+
+    @Test
+    fun testPronosticsFromUser(){
+        Mockito.`when`(pronosticRepository.findByUserAndCompetition("pedro@gmail.com","PD"))
+            .thenReturn(listOf(pronostic,pronostic))
+
+        val pronostics = pronosticService.pronosticsFromUser("pedro@gmail.com","PD")
+
+        assertEquals(pronostics.size, 2)
+    }
+
+    @Test
+    fun testNotEvaluatedPronostics(){
+        Mockito.`when`(pronosticRepository.findNotEvaluatedPronostics("pedro@gmail.com","PD",1))
+            .thenReturn(listOf(pronostic))
+
+        val notEvaluatedPronostics = pronosticService.notEvaluatedPronostics("pedro@gmail.com","PD",1)
+
+        assertEquals(notEvaluatedPronostics.size,1)
     }
 
 
