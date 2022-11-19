@@ -21,4 +21,9 @@ class UserBuilder(
         this.email = email
         return this
     }
+
+    fun withName(name: String): UserBuilder {
+        this.name = name
+        return this
+    }
 }
