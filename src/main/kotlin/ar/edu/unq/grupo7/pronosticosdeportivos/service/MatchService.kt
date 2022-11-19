@@ -6,6 +6,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.MatchListDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.toDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.MatchNotFoundException
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.NoMatchesException
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TeamRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,6 +14,7 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
+import java.lang.NullPointerException
 
 @Service
 class MatchService {
@@ -36,11 +38,15 @@ class MatchService {
                 object : ParameterizedTypeReference<MatchListDTO>() {}
             )
             if  (matchesList.size < response.body!!.matches.size){
-                matchesList = response.body!!.matches.map {
-                    val localTeam = teamService.saveTeam(it.homeTeam.toModel())
-                    val awayTeam = teamService.saveTeam(it.awayTeam.toModel())
+                try {
+                    matchesList = response.body!!.matches.map {
+                        val localTeam = teamService.saveTeam(it.homeTeam.toModel())
+                        val awayTeam = teamService.saveTeam(it.awayTeam.toModel())
 
-                    it.toModel(competition,localTeam,awayTeam)
+                        it.toModel(competition, localTeam, awayTeam)
+                    }
+                } catch (e : NullPointerException){
+                    throw NoMatchesException("La liga no tiene partidos disponibles por el momento")
                 }
             }
             else{

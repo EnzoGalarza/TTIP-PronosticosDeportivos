@@ -21,7 +21,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(TournamentNotFoundException::class,
         MatchNotFoundException::class,
-        UserNotFoundException::class)
+        UserNotFoundException::class, NoMatchesException::class)
     fun handleNotFound(exception : Exception) : ResponseEntity<Any>{
         return ResponseEntity(exception.message,HttpStatus.NOT_FOUND)
     }
