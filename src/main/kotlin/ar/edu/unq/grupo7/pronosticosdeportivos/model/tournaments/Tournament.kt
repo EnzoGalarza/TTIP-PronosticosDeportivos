@@ -7,6 +7,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.NoCriteriaTourna
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.exceptions.TournamentNameLengthException
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.*
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
+import java.time.LocalDate
 import javax.persistence.*
 
 @NamedNativeQuery(name = "Tournament.findByUserId",
@@ -26,7 +27,8 @@ class Tournament(@Column val name : String,
                  @Column val competition : String,
                  @OneToMany(cascade = [CascadeType.ALL])
                  @JoinColumn(name = "tournamentId")
-                 val criterias : List<Criteria>) {
+                 val criterias : List<Criteria>,
+                 @Column val endDate: LocalDate) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,7 +68,7 @@ class Tournament(@Column val name : String,
     }
 
     fun validate(userEmails : List<String> = listOf()){
-        require(name.length > 3){
+        require(name.length >= 3){
             throw TournamentNameLengthException("El tamaño mínimo del nombre son 3 caracteres")
         }
         require(name.length <= 20){

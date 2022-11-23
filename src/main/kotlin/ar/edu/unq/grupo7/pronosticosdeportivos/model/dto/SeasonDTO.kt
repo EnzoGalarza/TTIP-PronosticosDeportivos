@@ -1,4 +1,0 @@
-package ar.edu.unq.grupo7.pronosticosdeportivos.model.dto
-
-data class SeasonDTO(var currentSeason : CurrentSeasonDTO) {
-}

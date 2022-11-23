@@ -1,6 +1,7 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentResultsDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Email
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.UserScore
@@ -30,9 +31,9 @@ class TournamentController {
     }
 
     @GetMapping("/tournamentScores/{tournamentId}")
-    fun getTournamentScores(@PathVariable("tournamentId")tournamentId : Long) : ResponseEntity<List<UserScore>>{
-        val userScores = tournamentService.getTournamentsUserScores(tournamentId)
-        return ResponseEntity(userScores,HttpStatus.OK)
+    fun getTournamentScores(@PathVariable("tournamentId")tournamentId : Long) : ResponseEntity<TournamentResultsDTO>{
+        val tournamentResults = tournamentService.getTournamentsUserScores(tournamentId)
+        return ResponseEntity(tournamentResults,HttpStatus.OK)
     }
 
     @PutMapping("/tournaments/update/{tournamentId}")

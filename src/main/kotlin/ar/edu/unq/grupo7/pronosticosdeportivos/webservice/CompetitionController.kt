@@ -18,10 +18,10 @@ class CompetitionController {
     lateinit var competitionService: CompetitionService
 
     @GetMapping(value = ["/competitions"])
-    fun getCompetitions(): ResponseEntity<MutableList<Competition>> {
-        val competitions : MutableList<Competition> = competitionService.getCompetitions()
+    fun getCompetitions(): ResponseEntity<List<Competition>> {
+        val competitions : List<Competition> = competitionService.getCompetitions()
 
-        return ResponseEntity<MutableList<Competition>>(competitions, HttpStatus.OK)
+        return ResponseEntity<List<Competition>>(competitions, HttpStatus.OK)
     }
 
     @GetMapping(value = ["/currentMatchDay/{competition}"])

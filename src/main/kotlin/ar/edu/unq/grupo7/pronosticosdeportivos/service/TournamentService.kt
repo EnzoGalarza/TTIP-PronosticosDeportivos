@@ -1,6 +1,7 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.service
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentResultsDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.UserTournamentDTO
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.email.Email
@@ -16,6 +17,7 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 
 @Service
 class TournamentService {
@@ -46,7 +48,7 @@ class TournamentService {
     @Transactional
     fun saveTournament(tournament: TournamentDTO) : Tournament{
         try {
-            val createdTournament = tournament.toModel()
+            val createdTournament = tournament.toModel(competitionRepository.findByCode(tournament.competition).endDate)
             createdTournament.validate()
             for(userEmail in tournament.usersEmail){
                 val getUser = userRepository.findByEmail(userEmail).get()
@@ -114,8 +116,10 @@ class TournamentService {
     }
 
     @Transactional
-    fun getTournamentsUserScores(tournamentId : Long): List<UserScore> {
-       return userScoreRepository.findTournamentScores(tournamentId)
+    fun getTournamentsUserScores(tournamentId : Long): TournamentResultsDTO {
+        val tournament = tournamentRepository.findById(tournamentId).get()
+        return TournamentResultsDTO(userScoreRepository.findTournamentScores(tournamentId),
+                                    tournament.endDate.isBefore(LocalDate.now()))
     }
 
     @Transactional
