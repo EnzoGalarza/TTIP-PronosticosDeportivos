@@ -11,9 +11,11 @@ import java.time.LocalDate
 import javax.persistence.*
 
 @NamedNativeQuery(name = "Tournament.findByUserId",
-                  query = "SELECT tournament.id AS id, tournament.name AS name, tournament.competition as competition\n" +
+                  query = "SELECT tournament.id AS id, tournament.name AS name, tournament.competition AS competition, \n" +
+                          "competition.name AS competitionName, competition.emblem AS emblem \n" +
                           "FROM tournament\n" +
                           "INNER JOIN tournament_user on tournament.id = tournament_user.tournament_id\n" +
+                          "INNER JOIN competition on competition.code = tournament.competition\n" +
                           "INNER JOIN user_score on tournament_user.user_score_id = user_score.id\n" +
                           "WHERE user_score.user_score_id = ?1",
                   resultSetMapping = "Mapping.UserTournamentDTO")
@@ -21,7 +23,9 @@ import javax.persistence.*
                     classes = (arrayOf(ConstructorResult(targetClass = UserTournamentDTO::class,
                     columns = (arrayOf(ColumnResult(name = "id", type = Long::class),
                                        ColumnResult(name = "name", type = String::class),
-                                       ColumnResult(name = "competition", type = String::class)))))))
+                                       ColumnResult(name = "competition", type = String::class),
+                                       ColumnResult(name = "competitionName", type = String::class),
+                                       ColumnResult(name = "emblem", type = String::class)))))))
 @Entity
 class Tournament(@Column val name : String,
                  @Column val competition : String,
