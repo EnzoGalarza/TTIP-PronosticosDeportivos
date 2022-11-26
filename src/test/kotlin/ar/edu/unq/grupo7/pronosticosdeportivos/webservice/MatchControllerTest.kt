@@ -8,11 +8,9 @@ import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.MatchRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.PronosticRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.TeamRepository
 import ar.edu.unq.grupo7.pronosticosdeportivos.service.GenerateHeader
-import ar.edu.unq.grupo7.pronosticosdeportivos.service.MatchService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest

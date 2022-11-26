@@ -1,14 +1,12 @@
 package ar.edu.unq.grupo7.pronosticosdeportivos.webservice
 
 import ar.edu.unq.grupo7.pronosticosdeportivos.builders.CompetitionBuilder
+import ar.edu.unq.grupo7.pronosticosdeportivos.builders.TournamentBuilder
 import ar.edu.unq.grupo7.pronosticosdeportivos.builders.UserBuilder
+import ar.edu.unq.grupo7.pronosticosdeportivos.model.competitions.Competition
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.TournamentDTO
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.dto.toModel
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.pronostics.CompleteResult
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Criteria
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.tournaments.Tournament
 import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.Notification
-import ar.edu.unq.grupo7.pronosticosdeportivos.model.user.User
 import ar.edu.unq.grupo7.pronosticosdeportivos.repositories.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,7 +19,6 @@ import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -51,7 +48,11 @@ class TournamentControllerTest {
     @Autowired
     lateinit var notificationRepository : NotificationRepository
 
+    lateinit var competition : Competition
+
     val userBuilder = UserBuilder()
+    val tournamentBuilder = TournamentBuilder()
+    val competitionBuilder = CompetitionBuilder()
 
     @BeforeEach
     @Throws(Exception::class)
@@ -63,6 +64,9 @@ class TournamentControllerTest {
         competitionRepository.deleteAll()
         userRepository.deleteAll()
 
+        competition = competitionRepository.save(competitionBuilder.withCode("SA").build())
+
+        competitionRepository.save(competitionBuilder.withCode("PD").build())
     }
 
     @Test
@@ -75,8 +79,7 @@ class TournamentControllerTest {
         val criteria = listOf(Criteria("Complete",3))
         val tournament = TournamentDTO("Tournament 1", "PD", "user1@hotmail.com",usersToInvite, criteria)
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/tournaments")
+        mockMvc.perform(post("/tournaments")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(mapper.writeValueAsBytes(tournament)))
             .andExpect(MockMvcResultMatchers.status().isCreated)
@@ -93,8 +96,7 @@ class TournamentControllerTest {
         val criteria = listOf(Criteria("Complete",3))
         val tournament = TournamentDTO("Tournament 1", "PD", "user1@hotmail.com",usersToInvite, criteria)
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/tournaments")
+        mockMvc.perform(post("/tournaments")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsBytes(tournament)))
             .andExpect(MockMvcResultMatchers.status().isNotFound)
@@ -110,8 +112,7 @@ class TournamentControllerTest {
         val criteria = listOf(Criteria("Complete",3))
         val tournament = TournamentDTO("T", "PD", "user1@hotmail.com",usersToInvite, criteria)
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/tournaments")
+        mockMvc.perform(post("/tournaments")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsBytes(tournament)))
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -122,7 +123,7 @@ class TournamentControllerTest {
     fun getTournaments(){
         val userTournament = userRepository.save(userBuilder.withEmail("usert1@hotmail.com").build())
 
-        val tournament = Tournament("tournament 1","PD", listOf(Criteria("complete",3)))
+        val tournament = tournamentBuilder.withName("tournament 1").withCompetition("SA").build()
 
         tournament.addUser(userTournament)
         tournamentRepository.save(tournament)
@@ -139,7 +140,7 @@ class TournamentControllerTest {
     fun getTournamentScores(){
         val userTournament = userRepository.save(userBuilder.withEmail("usert1@hotmail.com").build())
 
-        val tournament = Tournament("tournament 1","PD", listOf(Criteria("complete",3)))
+        val tournament = tournamentBuilder.withName("tournament 1").build()
 
         tournament.addUser(userTournament)
 
@@ -148,19 +149,18 @@ class TournamentControllerTest {
         mockMvc.perform(get("/tournamentScores/{tournamentId}",savedTournament.id))
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].user.name").value(userTournament.getName()))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].score").value(0))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.users.length()").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.users[0].user.name").value(userTournament.getName()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.users[0].score").value(0))
     }
 
 
     @Test
     @WithMockUser("email")
     fun sendUserInvitation(){
-        competitionRepository.save(CompetitionBuilder().withCode("PD").build())
         val userTournament = userRepository.save(userBuilder.withEmail("usert1@hotmail.com").build())
 
-        val tournament = Tournament("tournament 1","PD", listOf(Criteria("complete",3)))
+        val tournament = tournamentBuilder.withCompetition("PD").withName("tournament 1").build()
 
         val savedTournament = tournamentRepository.save(tournament)
 
@@ -181,7 +181,7 @@ class TournamentControllerTest {
         competitionRepository.save(CompetitionBuilder().withCode("PD").build())
         val userTournament = userRepository.save(userBuilder.withEmail("usert1@hotmail.com").build())
 
-        val tournament = Tournament("tournament 1","PD", listOf(Criteria("complete",3)))
+        val tournament = tournamentBuilder.withName("tournament 1").build()
 
         val savedTournament = tournamentRepository.save(tournament)
 

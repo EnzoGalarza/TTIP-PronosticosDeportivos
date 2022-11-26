@@ -30,16 +30,7 @@ class NotificationControllerTest {
     lateinit var mapper: ObjectMapper
 
     @Autowired
-    lateinit var tournamentRepository : TournamentRepository
-
-    @Autowired
     lateinit var userRepository: UserRepository
-
-    @Autowired
-    lateinit var competitionRepository: CompetitionRepository
-
-    @Autowired
-    lateinit var userScoreRepository: UserScoreRepository
 
     @Autowired
     lateinit var notificationRepository : NotificationRepository
@@ -56,7 +47,7 @@ class NotificationControllerTest {
         userRepository.deleteAll()
         notificationRepository.deleteAll()
 
-        notification = Notification(true,"Mensaje",1)
+        notification = Notification(true,"Message",1)
 
         user = userBuilder.build()
         user.addNotification(notification)
